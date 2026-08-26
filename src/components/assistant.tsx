@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useApp, uid } from "@/lib/store";
 import { respond } from "@/lib/assistant";
+import { isoToday } from "@/lib/format";
 import type { ChatMessage, MemoryItem, Proposal, Reminder, Task } from "@/lib/types";
 import { USER } from "@/lib/mock-data";
 
@@ -68,16 +69,16 @@ export function useAssistant() {
         case "reminder":
           app.addReminder({
             title: proposal.title,
-            date: p.date,
-            time: p.time,
+            date: p.date ?? isoToday(),
+            time: p.time ?? "09:00",
             repeat: p.repeat ?? "once",
           });
           break;
         case "event":
           app.addEvent({
             title: proposal.title,
-            date: p.date,
-            time: p.time,
+            date: p.date ?? isoToday(),
+            time: p.time ?? "09:00",
             durationMin: 60,
             category: p.category ?? "Geral",
           });
@@ -100,7 +101,7 @@ export function useAssistant() {
           proposal.planItems?.forEach((item) =>
             app.addEvent({
               title: item.title,
-              date: p.date,
+              date: p.date ?? isoToday(),
               time: item.time,
               durationMin: 60,
               category: "Planejamento",

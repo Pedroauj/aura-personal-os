@@ -115,7 +115,7 @@ function ProjectsPage() {
                   .filter((n) =>
                     `${n.title} ${n.content} ${n.category}`
                       .toLowerCase()
-                      .includes(project.name.split(" ")[0].toLowerCase()),
+                      .includes((project.name.split(" ")[0] ?? "").toLowerCase()),
                   )
                   .map((n) => (
                     <div key={n.id} className="surface-card px-4 py-3.5">

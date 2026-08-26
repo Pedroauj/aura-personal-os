@@ -97,7 +97,7 @@ function CalendarPage() {
           {mode === "Mês"
             ? monthLabel(base.getFullYear(), base.getMonth())
             : mode === "Semana"
-              ? `Semana de ${longDate(weekDays[0])}`
+              ? `Semana de ${longDate(weekDays[0] ?? cursor)}`
               : longDate(cursor)}
         </p>
         <GhostButton onClick={() => shift(mode === "Mês" ? 30 : mode === "Semana" ? 7 : 1)}>
