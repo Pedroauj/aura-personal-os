@@ -15,7 +15,7 @@ export interface NavItem {
 export interface UserProfileSidebarProps {
   name: string;
   email: string;
-  avatarUrl?: string;
+  avatarUrl?: string | undefined;
   initials: string;
   navItems: NavItem[];
   logoutItem: {
@@ -40,7 +40,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { type: "spring", stiffness: 280, damping: 22 },
+    transition: { type: "spring" as const, stiffness: 280, damping: 22 },
   },
 };
 
@@ -50,7 +50,7 @@ function Avatar({
   initials,
   name,
 }: {
-  avatarUrl?: string;
+  avatarUrl?: string | undefined;
   initials: string;
   name: string;
 }) {

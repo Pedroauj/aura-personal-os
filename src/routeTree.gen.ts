@@ -24,6 +24,7 @@ import { Route as AuthenticatedNotasRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedProjetosRouteImport } from './routes/_authenticated/projetos'
 import { Route as AuthenticatedTarefasRouteImport } from './routes/_authenticated/tarefas'
+import { Route as ApiPublicCronRemindersRouteImport } from './routes/api/public/cron/reminders'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -100,6 +101,11 @@ const AuthenticatedTarefasRoute = AuthenticatedTarefasRouteImport.update({
   path: '/tarefas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicCronRemindersRoute = ApiPublicCronRemindersRouteImport.update({
+  id: '/api/public/cron/reminders',
+  path: '/api/public/cron/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/perfil': typeof AuthenticatedPerfilRoute
   '/projetos': typeof AuthenticatedProjetosRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
+  '/api/public/cron/reminders': typeof ApiPublicCronRemindersRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/projetos': typeof AuthenticatedProjetosRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
   '/': typeof AuthenticatedIndexRoute
+  '/api/public/cron/reminders': typeof ApiPublicCronRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/_authenticated/projetos': typeof AuthenticatedProjetosRoute
   '/_authenticated/tarefas': typeof AuthenticatedTarefasRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/api/public/cron/reminders': typeof ApiPublicCronRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/perfil'
     | '/projetos'
     | '/tarefas'
+    | '/api/public/cron/reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/projetos'
     | '/tarefas'
     | '/'
+    | '/api/public/cron/reminders'
   id:
     | '__root__'
     | '/_authenticated'
@@ -201,12 +212,14 @@ export interface FileRouteTypes {
     | '/_authenticated/projetos'
     | '/_authenticated/tarefas'
     | '/_authenticated/'
+    | '/api/public/cron/reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicCronRemindersRoute: typeof ApiPublicCronRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -316,6 +329,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTarefasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/cron/reminders': {
+      id: '/api/public/cron/reminders'
+      path: '/api/public/cron/reminders'
+      fullPath: '/api/public/cron/reminders'
+      preLoaderRoute: typeof ApiPublicCronRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -356,6 +376,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicCronRemindersRoute: ApiPublicCronRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

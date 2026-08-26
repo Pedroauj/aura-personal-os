@@ -18,6 +18,8 @@ import type {
 import { isoToday } from "./format";
 import { AppContext, uid } from "./app-context";
 import type { AppContextValue } from "./store-types";
+import { supabase } from "@/integrations/supabase/client";
+import { rowToReminder, toRemindAt, type ReminderRow } from "./reminders-mapper";
 
 export { uid, useApp } from "./app-context";
 
@@ -56,12 +58,37 @@ function usePersistentState<T>(key: string, initial: T) {
 export function AppProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = usePersistentState<Task[]>("tasks", []);
   const [events, setEvents] = usePersistentState<CalendarEvent[]>("events", []);
-  const [reminders, setReminders] = usePersistentState<Reminder[]>("reminders", []);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
   const [notes, setNotes] = usePersistentState<Note[]>("notes", []);
   const [memories, setMemories] = usePersistentState<MemoryItem[]>("memories", []);
   const [projects, setProjects] = usePersistentState<Project[]>("projects", []);
   const [inbox, setInbox] = usePersistentState<InboxItem[]>("inbox", []);
   const [messages, setMessages] = usePersistentState<ChatMessage[]>("messages", []);
+
+  // Lembretes ficam no backend para permitir notificações no horário certo.
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) {
+        if (active) setReminders([]);
+        return;
+      }
+      const { data } = await supabase
+        .from("reminders")
+        .select("id, title, remind_at, repeat, done")
+        .order("remind_at", { ascending: true });
+      if (active && data) setReminders((data as ReminderRow[]).map(rowToReminder));
+    };
+    void load();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => {
+      void load();
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   const addTask = useCallback((t: Partial<Task> & { title: string }) => {
     const task: Task = {
@@ -110,7 +137,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addReminder = useCallback((r: Partial<Reminder> & { title: string }) => {
     const rem: Reminder = {
-      id: uid("r"),
+      id: crypto.randomUUID(),
       date: isoToday(),
       time: "09:00",
       repeat: "once",
@@ -118,17 +145,38 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...r,
     };
     setReminders((prev) => [rem, ...prev]);
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) return;
+      await supabase.from("reminders").insert({
+        id: rem.id,
+        user_id: data.user.id,
+        title: rem.title,
+        remind_at: toRemindAt(rem.date, rem.time),
+        repeat: rem.repeat,
+        done: rem.done,
+      });
+    })();
     return rem;
   }, []);
 
   const toggleReminder = useCallback((id: string) => {
-    setReminders((prev) => prev.map((r) => (r.id === id ? { ...r, done: !r.done } : r)));
+    setReminders((prev) => {
+      const current = prev.find((r) => r.id === id);
+      if (current) {
+        void supabase
+          .from("reminders")
+          .update({ done: !current.done, notified_at: null })
+          .eq("id", id);
+      }
+      return prev.map((r) => (r.id === id ? { ...r, done: !r.done } : r));
+    });
   }, []);
 
-  const removeReminder = useCallback(
-    (id: string) => setReminders((prev) => prev.filter((r) => r.id !== id)),
-    [],
-  );
+  const removeReminder = useCallback((id: string) => {
+    void supabase.from("reminders").delete().eq("id", id);
+    setReminders((prev) => prev.filter((r) => r.id !== id));
+  }, []);
 
   const addNote = useCallback((n: Partial<Note> & { title: string }) => {
     const note: Note = {
