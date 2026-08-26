@@ -89,14 +89,14 @@ interface AppContextValue extends AppState {
 const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [tasks, setTasks] = useState<Task[]>(seed.tasks);
-  const [events, setEvents] = useState<CalendarEvent[]>(seed.events);
-  const [reminders, setReminders] = useState<Reminder[]>(seed.reminders);
-  const [notes, setNotes] = useState<Note[]>(seed.notes);
-  const [memories, setMemories] = useState<MemoryItem[]>(seed.memories);
-  const [projects, setProjects] = useState<Project[]>(seed.projects);
-  const [inbox, setInbox] = useState<InboxItem[]>(seed.inbox);
-  const [messages, setMessages] = useState<ChatMessage[]>(seed.initialMessages);
+  const [tasks, setTasks] = usePersistentState<Task[]>("tasks", []);
+  const [events, setEvents] = usePersistentState<CalendarEvent[]>("events", []);
+  const [reminders, setReminders] = usePersistentState<Reminder[]>("reminders", []);
+  const [notes, setNotes] = usePersistentState<Note[]>("notes", []);
+  const [memories, setMemories] = usePersistentState<MemoryItem[]>("memories", []);
+  const [projects, setProjects] = usePersistentState<Project[]>("projects", []);
+  const [inbox, setInbox] = usePersistentState<InboxItem[]>("inbox", []);
+  const [messages, setMessages] = usePersistentState<ChatMessage[]>("messages", []);
 
   const addTask = useCallback((t: Partial<Task> & { title: string }) => {
     const task: Task = {
