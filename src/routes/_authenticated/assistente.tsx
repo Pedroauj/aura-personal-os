@@ -59,7 +59,18 @@ function AssistantPage() {
 
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto w-full max-w-3xl space-y-6 px-5 py-6">
+          {messages.length === 0 && !thinking && (
+            <div className="flex flex-col items-center gap-2 py-16 text-center">
+              <Sparkles className="size-5 text-primary" />
+              <p className="text-[15px] font-medium">Como posso ajudar?</p>
+              <p className="max-w-sm text-[13px] text-muted-foreground">
+                Peça para criar tarefas, agendar compromissos, anotar ideias ou
+                organizar o seu dia.
+              </p>
+            </div>
+          )}
           {messages.map((m) => (
+
             <AssistantMessage
               key={m.id}
               message={m}
