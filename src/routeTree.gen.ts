@@ -18,6 +18,7 @@ import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as LembretesRouteImport } from './routes/lembretes'
 import { Route as MemoriaRouteImport } from './routes/memoria'
 import { Route as NotasRouteImport } from './routes/notas'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as TarefasRouteImport } from './routes/tarefas'
 
@@ -66,6 +67,11 @@ const NotasRoute = NotasRouteImport.update({
   path: '/notas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjetosRoute = ProjetosRouteImport.update({
   id: '/projetos',
   path: '/projetos',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/lembretes': typeof LembretesRoute
   '/memoria': typeof MemoriaRoute
   '/notas': typeof NotasRoute
+  '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
   '/tarefas': typeof TarefasRoute
 }
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/lembretes': typeof LembretesRoute
   '/memoria': typeof MemoriaRoute
   '/notas': typeof NotasRoute
+  '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
   '/tarefas': typeof TarefasRoute
 }
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/lembretes': typeof LembretesRoute
   '/memoria': typeof MemoriaRoute
   '/notas': typeof NotasRoute
+  '/perfil': typeof PerfilRoute
   '/projetos': typeof ProjetosRoute
   '/tarefas': typeof TarefasRoute
 }
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/lembretes'
     | '/memoria'
     | '/notas'
+    | '/perfil'
     | '/projetos'
     | '/tarefas'
   fileRoutesByTo: FileRoutesByTo
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/lembretes'
     | '/memoria'
     | '/notas'
+    | '/perfil'
     | '/projetos'
     | '/tarefas'
   id:
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/lembretes'
     | '/memoria'
     | '/notas'
+    | '/perfil'
     | '/projetos'
     | '/tarefas'
   fileRoutesById: FileRoutesById
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   LembretesRoute: typeof LembretesRoute
   MemoriaRoute: typeof MemoriaRoute
   NotasRoute: typeof NotasRoute
+  PerfilRoute: typeof PerfilRoute
   ProjetosRoute: typeof ProjetosRoute
   TarefasRoute: typeof TarefasRoute
 }
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projetos': {
       id: '/projetos'
       path: '/projetos'
@@ -265,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   LembretesRoute: LembretesRoute,
   MemoriaRoute: MemoriaRoute,
   NotasRoute: NotasRoute,
+  PerfilRoute: PerfilRoute,
   ProjetosRoute: ProjetosRoute,
   TarefasRoute: TarefasRoute,
 }
