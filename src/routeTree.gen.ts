@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as CalendarioRouteImport } from './routes/calendario'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as HojeRouteImport } from './routes/hoje'
 import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as LembretesRouteImport } from './routes/lembretes'
@@ -33,6 +34,11 @@ const AssistenteRoute = AssistenteRouteImport.update({
 const CalendarioRoute = CalendarioRouteImport.update({
   id: '/calendario',
   path: '/calendario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HojeRoute = HojeRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
   '/calendario': typeof CalendarioRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/hoje': typeof HojeRoute
   '/inbox': typeof InboxRoute
   '/lembretes': typeof LembretesRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
   '/calendario': typeof CalendarioRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/hoje': typeof HojeRoute
   '/inbox': typeof InboxRoute
   '/lembretes': typeof LembretesRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
   '/calendario': typeof CalendarioRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/hoje': typeof HojeRoute
   '/inbox': typeof InboxRoute
   '/lembretes': typeof LembretesRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/assistente'
     | '/calendario'
+    | '/configuracoes'
     | '/hoje'
     | '/inbox'
     | '/lembretes'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/assistente'
     | '/calendario'
+    | '/configuracoes'
     | '/hoje'
     | '/inbox'
     | '/lembretes'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/assistente'
     | '/calendario'
+    | '/configuracoes'
     | '/hoje'
     | '/inbox'
     | '/lembretes'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistenteRoute: typeof AssistenteRoute
   CalendarioRoute: typeof CalendarioRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
   HojeRoute: typeof HojeRoute
   InboxRoute: typeof InboxRoute
   LembretesRoute: typeof LembretesRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/calendario'
       fullPath: '/calendario'
       preLoaderRoute: typeof CalendarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hoje': {
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistenteRoute: AssistenteRoute,
   CalendarioRoute: CalendarioRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
   HojeRoute: HojeRoute,
   InboxRoute: InboxRoute,
   LembretesRoute: LembretesRoute,
