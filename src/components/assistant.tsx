@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useApp, uid } from "@/lib/store";
 import { respond } from "@/lib/assistant";
-import type { ChatMessage, Proposal } from "@/lib/types";
+import type { ChatMessage, MemoryItem, Proposal, Reminder, Task } from "@/lib/types";
 import { USER } from "@/lib/mock-data";
 
 export function useAssistant() {
