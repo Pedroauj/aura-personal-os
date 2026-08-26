@@ -53,6 +53,8 @@ async function handle(request: Request) {
     .eq("done", false)
     .is("notified_at", null)
     .lte("remind_at", new Date().toISOString())
+    // Não dispara lembretes muito atrasados (ex.: criados com horário já passado)
+    .gte("remind_at", new Date(Date.now() - 30 * 60_000).toISOString())
     .limit(100);
 
   if (error) return new Response(error.message, { status: 500 });

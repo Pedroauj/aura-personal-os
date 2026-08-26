@@ -57,8 +57,11 @@ export function detectTime(text: string): string {
   }
   const hm = t.match(/\b(\d{1,2})[:h](\d{2})\b/);
   if (hm) return `${(hm[1] ?? "0").padStart(2, "0")}:${hm[2] ?? "00"}`;
-  const h = t.match(/\b(?:[àa]s|as)\s*(\d{1,2})\s*(?:h|horas)?\b/);
+  // "às 20h", "as 20hrs", "20 horas", "às 8"
+  const h = t.match(/(?:[àa]s\s*)?(\d{1,2})\s*(?:h|hs|hrs?|horas?)(?!\S)/);
   if (h) return `${(h[1] ?? "0").padStart(2, "0")}:00`;
+  const h2 = t.match(/(?:[àa]s)\s*(\d{1,2})(?!\S)/);
+  if (h2) return `${(h2[1] ?? "0").padStart(2, "0")}:00`;
   if (/manh[ãa]/.test(t)) return "09:00";
   if (/tarde/.test(t)) return "14:00";
   if (/noite/.test(t)) return "20:00";

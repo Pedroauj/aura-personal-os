@@ -1,17 +1,54 @@
 import { useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowUp, Check, Sparkles, X, type LucideIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useApp, uid } from "@/lib/store";
 import { respond } from "@/lib/assistant";
-import { isoToday } from "@/lib/format";
+import { isoToday, relativeDay } from "@/lib/format";
+import { askAssistant, type AssistantAction } from "@/lib/ai-assistant.functions";
 import type { ChatMessage, MemoryItem, Proposal, Reminder, Task } from "@/lib/types";
 import { useCurrentUser } from "@/lib/current-user";
+
+const KIND_HINT: Record<Proposal["kind"], string> = {
+  task: "Tarefa",
+  reminder: "Lembrete",
+  event: "Compromisso",
+  note: "Nota",
+  memory: "Memória",
+  plan: "Plano do dia",
+};
+
+function actionToProposal(a: AssistantAction): Proposal {
+  const bits = [
+    a.date ? relativeDay(a.date) : null,
+    a.time,
+    a.priority ? `prioridade ${a.priority}` : null,
+    a.category,
+  ].filter(Boolean) as string[];
+  return {
+    kind: a.kind,
+    title: a.title,
+    subtitle: a.subtitle ?? (bits.length ? bits.join(" • ") : KIND_HINT[a.kind]),
+    payload: {
+      date: a.date ?? undefined,
+      time: a.time ?? undefined,
+      durationMin: a.durationMin ?? undefined,
+      priority: a.priority ?? undefined,
+      repeat: a.repeat ?? undefined,
+      category: a.category ?? undefined,
+      content: a.content ?? undefined,
+      kind: a.memoryKind ?? undefined,
+    },
+    ...(a.planItems && a.planItems.length ? { planItems: a.planItems } : {}),
+  };
+}
 
 export function useAssistant() {
   const app = useApp();
   const { pushMessage, setProposalState } = app;
   const [thinking, setThinking] = useState(false);
+  const ask = useServerFn(askAssistant);
 
   const send = useCallback(
     (text: string) => {
@@ -24,6 +61,7 @@ export function useAssistant() {
         createdAt: new Date().toISOString(),
       });
       setThinking(true);
+
       const ctx = {
         tasks: app.tasks,
         events: app.events,
@@ -31,20 +69,83 @@ export function useAssistant() {
         notes: app.notes,
         memories: app.memories,
       };
-      window.setTimeout(() => {
-        const reply = respond(clean, ctx);
-        pushMessage({
-          id: uid("msg"),
-          role: "assistant",
-          content: reply.content,
-          createdAt: new Date().toISOString(),
-          proposal: reply.proposal,
-          proposalState: reply.proposal ? "pending" : undefined,
-        });
-        setThinking(false);
-      }, 620);
+
+      const now = new Date();
+      const pad = (n: number) => String(n).padStart(2, "0");
+
+      const run = async () => {
+        try {
+          const result = await ask({
+            data: {
+              message: clean,
+              history: app.messages.slice(-10).map((m) => ({
+                role: m.role,
+                content: m.content,
+              })),
+              now: {
+                iso: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+                weekday: now.toLocaleDateString("pt-BR", { weekday: "long" }),
+                time: `${pad(now.getHours())}:${pad(now.getMinutes())}`,
+              },
+              snapshot: {
+                tasks: ctx.tasks.slice(0, 80) as unknown as Record<string, unknown>[],
+                events: ctx.events.slice(0, 80) as unknown as Record<string, unknown>[],
+                reminders: ctx.reminders.slice(0, 60) as unknown as Record<string, unknown>[],
+                notes: ctx.notes.slice(0, 40) as unknown as Record<string, unknown>[],
+                memories: ctx.memories.slice(0, 40) as unknown as Record<string, unknown>[],
+                projects: app.projects.slice(0, 20) as unknown as Record<string, unknown>[],
+              },
+            },
+          });
+
+          const actions = result.actions ?? [];
+          const first = actions[0];
+          pushMessage({
+            id: uid("msg"),
+            role: "assistant",
+            content: result.reply || (first ? "Preparei isto para você:" : "Certo."),
+            createdAt: new Date().toISOString(),
+            proposal: first ? actionToProposal(first) : undefined,
+            proposalState: first ? "pending" : undefined,
+          });
+          actions.slice(1).forEach((a) => {
+            pushMessage({
+              id: uid("msg"),
+              role: "assistant",
+              content: "",
+              createdAt: new Date().toISOString(),
+              proposal: actionToProposal(a),
+              proposalState: "pending",
+            });
+          });
+        } catch {
+          const reply = respond(clean, ctx);
+          pushMessage({
+            id: uid("msg"),
+            role: "assistant",
+            content: reply.content,
+            createdAt: new Date().toISOString(),
+            proposal: reply.proposal,
+            proposalState: reply.proposal ? "pending" : undefined,
+          });
+        } finally {
+          setThinking(false);
+        }
+      };
+
+      void run();
     },
-    [app.tasks, app.events, app.reminders, app.notes, app.memories, pushMessage],
+    [
+      app.tasks,
+      app.events,
+      app.reminders,
+      app.notes,
+      app.memories,
+      app.projects,
+      app.messages,
+      pushMessage,
+      ask,
+    ],
   );
 
   const accept = useCallback(
@@ -52,6 +153,7 @@ export function useAssistant() {
       const p = proposal.payload as {
         date?: string;
         time?: string;
+        durationMin?: number;
         priority?: Task["priority"];
         repeat?: Reminder["repeat"];
         category?: string;
@@ -79,7 +181,7 @@ export function useAssistant() {
             title: proposal.title,
             date: p.date ?? isoToday(),
             time: p.time ?? "09:00",
-            durationMin: 60,
+            durationMin: p.durationMin ?? 60,
             category: p.category ?? "Geral",
           });
           break;
@@ -206,16 +308,18 @@ export function AssistantMessage({
         </div>
       )}
       <div className={cn("max-w-[min(680px,88%)]", isUser && "flex flex-col items-end")}>
-        <div
-          className={cn(
-            "text-[14px] leading-relaxed whitespace-pre-line",
-            isUser
-              ? "rounded-2xl rounded-br-md bg-secondary px-4 py-2.5"
-              : "rounded-2xl rounded-bl-md bg-surface px-4 py-2.5 text-foreground/90",
-          )}
-        >
-          {message.content}
-        </div>
+        {message.content.trim() && (
+          <div
+            className={cn(
+              "text-[14px] leading-relaxed whitespace-pre-line",
+              isUser
+                ? "rounded-2xl rounded-br-md bg-secondary px-4 py-2.5"
+                : "rounded-2xl rounded-bl-md bg-surface px-4 py-2.5 text-foreground/90",
+            )}
+          >
+            {message.content}
+          </div>
+        )}
         {message.proposal && (
           <ProposalCard
             proposal={message.proposal}
