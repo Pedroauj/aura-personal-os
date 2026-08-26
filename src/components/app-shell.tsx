@@ -197,8 +197,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* ── Desktop sidebar ── */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-white/[0.07] bg-sidebar/80 backdrop-blur-2xl transition-[width] duration-300 ease-in-out md:flex",
-          "shadow-[1px_0_0_rgba(255,255,255,0.04)]",
+          "fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-white/[0.08] transition-[width] duration-300 ease-in-out md:flex",
+          "bg-sidebar/75 backdrop-blur-[48px] [backdrop-filter:blur(48px)_saturate(200%)_brightness(1.05)]",
+          "shadow-[1px_0_0_rgba(255,255,255,0.06),inset_-1px_0_0_rgba(255,255,255,0.03)]",
           collapsed ? "w-[68px]" : "w-[240px]",
         )}
       >
@@ -289,7 +290,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="flex w-[240px] flex-col p-0 border-r border-white/[0.07] bg-sidebar/95 backdrop-blur-2xl"
+              className="flex w-[240px] flex-col p-0 border-r border-white/[0.08] bg-sidebar/85 [backdrop-filter:blur(48px)_saturate(200%)_brightness(1.05)]"
             >
               {/* Sheet header */}
               <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-white/[0.06] px-4">

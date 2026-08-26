@@ -150,7 +150,7 @@ function Home() {
 
           <button
             onClick={() => navigate({ to: "/assistente" })}
-            className="mt-5 flex w-full cursor-pointer gap-3 rounded-xl border border-primary/20 bg-primary/8 p-4 text-left transition-colors hover:border-primary/35 hover:bg-primary/12"
+            className="surface-card mt-5 flex w-full cursor-pointer gap-3 p-4 text-left transition-all hover:brightness-110 hover:shadow-[inset_0_1.5px_0_oklch(1_0_0/25%),0_8px_32px_oklch(0_0_0/28%)]"
           >
             <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
               <Sparkles className="size-3.5" />

@@ -35,8 +35,8 @@ export function ToggleSwitchGlass({
           "transition-colors duration-200 ease-in-out",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           checked
-            ? "bg-primary shadow-[0_0_12px_var(--color-primary)/40]"
-            : "bg-white/10 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_0_0_1px_rgba(255,255,255,0.06)]",
+            ? "bg-primary shadow-[0_0_16px_var(--color-primary)/50,inset_0_1.5px_0_rgba(255,255,255,0.25)]"
+            : "backdrop-blur-2xl shadow-[inset_0_1.5px_0_rgba(255,255,255,0.18),inset_0_0_0_1px_rgba(255,255,255,0.08),0_2px_8px_rgba(0,0,0,0.25)]",
           "before:absolute before:inset-0 before:rounded-full",
           disabled && "cursor-not-allowed",
         )}
@@ -66,7 +66,8 @@ export function ToggleSwitchGlass({
             "shadow-[0_2px_6px_rgba(0,0,0,0.35),0_0_0_0.5px_rgba(0,0,0,0.08)]",
           )}
           style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%)",
+            background: "linear-gradient(180deg, #ffffff 0%, #e8e8e8 100%)",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
           }}
         >
           {/* Thumb inner highlight */}

@@ -93,22 +93,11 @@ function SettingsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...SPRING, delay: i * 0.05 }}
             className={cn(
-              "group relative overflow-hidden rounded-2xl",
-              "border border-white/8 bg-white/4 backdrop-blur-xl",
-              "shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]",
-              "transition-colors hover:bg-white/6",
+              "surface-card group",
+              "transition-all hover:brightness-[1.08]",
               t.disabled && "opacity-55",
             )}
           >
-            {/* Specular edge highlight */}
-            <div
-              className="pointer-events-none absolute inset-0 rounded-2xl"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%)",
-              }}
-            />
-
             <div className="flex items-center gap-4 px-4 py-4">
               <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/8">
                 <t.icon className="size-4 text-primary" />
@@ -134,7 +123,7 @@ function SettingsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...SPRING, delay: 0.25 }}
-          className="overflow-hidden rounded-2xl border border-white/8 bg-white/4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] divide-y divide-white/6"
+          className="glass-elevated divide-y divide-white/6"
         >
           {SHORTCUTS.map((s) => (
             <div key={s.keys} className="flex items-center gap-3 px-4 py-3.5">

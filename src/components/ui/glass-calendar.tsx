@@ -60,12 +60,7 @@ export function GlassCalendar({
 
   return (
     <div
-      className={cn(
-        "overflow-hidden rounded-2xl",
-        "border border-white/8 bg-white/5 backdrop-blur-2xl",
-        "shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.08)]",
-        className,
-      )}
+      className={cn("glass-elevated", className)}
     >
       {/* Month header */}
       <div className="flex items-center gap-2 px-4 pt-4 pb-3">

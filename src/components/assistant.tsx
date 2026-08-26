@@ -138,7 +138,7 @@ export function ProposalCard({
   onCancel: () => void;
 }) {
   return (
-    <div className="animate-pop mt-3 max-w-md rounded-xl border border-border-strong bg-surface-2 p-4">
+    <div className="surface-card animate-pop mt-3 max-w-md p-4">
       <p className="text-[11px] font-medium tracking-wide text-primary uppercase">
         {KIND_LABEL[proposal.kind]}
       </p>
