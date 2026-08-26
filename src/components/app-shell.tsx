@@ -67,7 +67,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         <div className="flex h-16 items-center gap-2.5 px-4">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+          <div className="relative flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary ring-1 ring-primary/25 shadow-[0_0_12px_var(--color-primary)]/20">
             <Sparkles className="size-4" />
           </div>
           {!collapsed && (
@@ -121,13 +121,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 to={item.to}
                 title={item.label}
                 className={cn(
-                  "group flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-all duration-200",
+                  "nudge group relative flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13px] font-medium",
                   active
                     ? "bg-secondary text-foreground"
                     : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
                   collapsed && "justify-center px-0",
                 )}
               >
+                {active && !collapsed && (
+                  <span className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-primary" />
+                )}
                 <item.icon
                   className={cn(
                     "size-[17px] shrink-0 transition-colors",

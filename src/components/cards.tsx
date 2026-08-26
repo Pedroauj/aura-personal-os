@@ -107,7 +107,7 @@ export function TaskCard({
   return (
     <div
       className={cn(
-        "group surface-card animate-rise flex items-start gap-3 px-4 py-3.5 transition-all duration-200 hover:border-border-strong hover:bg-surface-2",
+        "lift group surface-card animate-pop flex items-start gap-3 px-4 py-3.5",
         done && "opacity-55",
       )}
     >
@@ -173,7 +173,7 @@ export function TaskCard({
 
 export function EventCard({ event }: { event: CalendarEvent }) {
   return (
-    <div className="surface-card animate-rise px-4 py-3.5 transition-colors hover:border-border-strong hover:bg-surface-2">
+    <div className="lift surface-card animate-pop px-4 py-3.5">
       <div className="flex items-start gap-3">
         <div className="w-14 shrink-0">
           <p className="text-[13px] font-semibold tabular-nums">{event.time}</p>
@@ -224,7 +224,7 @@ export function ReminderCard({
   return (
     <div
       className={cn(
-        "group surface-card animate-rise flex items-center gap-3 px-4 py-3.5 transition-colors hover:border-border-strong hover:bg-surface-2",
+        "lift group surface-card animate-pop flex items-center gap-3 px-4 py-3.5",
         reminder.done && "opacity-55",
       )}
     >
@@ -282,7 +282,7 @@ export function ProjectCard({
 }) {
   const pct = total ? Math.round((done / total) * 100) : 0;
   return (
-    <div className="surface-card animate-rise p-5 transition-all duration-200 hover:border-border-strong hover:bg-surface-2">
+    <div className="lift surface-card animate-pop p-5">
       <div className="flex items-center gap-2.5">
         <span
           className="size-2.5 rounded-full"
@@ -305,7 +305,7 @@ export function ProjectCard({
         </div>
         <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
           <div
-            className="h-full rounded-full transition-[width] duration-500"
+            className="animate-bar h-full rounded-full"
             style={{ width: `${pct}%`, backgroundColor: project.color }}
           />
         </div>
@@ -333,7 +333,7 @@ export function NoteCard({
   return (
     <div
       onClick={onClick}
-      className="group surface-card animate-rise cursor-pointer p-5 transition-all duration-200 hover:border-border-strong hover:bg-surface-2"
+      className="lift group surface-card animate-pop cursor-pointer p-5"
     >
       <div className="flex items-start gap-2">
         <p className="flex-1 text-[14px] font-medium">{note.title}</p>

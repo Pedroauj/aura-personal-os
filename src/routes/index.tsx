@@ -83,9 +83,9 @@ function Home() {
   return (
     <div className="halo relative min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col justify-center px-5 py-16 md:py-24">
-        <div className="animate-rise">
+        <div className="animate-pop">
           <p className="text-[13px] text-muted-foreground">{longDate(today)}</p>
-          <h1 className="text-balance-tight mt-3 text-4xl font-semibold md:text-5xl">
+          <h1 className="text-balance-tight mt-3 text-4xl font-semibold tracking-tight md:text-5xl">
             {greeting()}, {USER.name}.
           </h1>
           <p className="mt-2 text-lg text-muted-foreground md:text-xl">
@@ -93,32 +93,33 @@ function Home() {
           </p>
         </div>
 
-        <div className="animate-rise mt-8" style={{ animationDelay: "80ms" }}>
+        <div className="animate-pop mt-8" style={{ animationDelay: "90ms" }}>
           <Composer onSubmit={ask} large />
           <div className="mt-4 flex flex-wrap gap-2">
-            {SUGGESTIONS.map((s) => (
+            {SUGGESTIONS.map((s, i) => (
               <QuickAction
                 key={s.label}
                 label={s.label}
                 icon={s.icon}
                 onClick={() => ask(s.text)}
+                delay={i * 40}
               />
             ))}
           </div>
         </div>
 
         <div
-          className="animate-rise surface-card mt-10 p-5"
-          style={{ animationDelay: "160ms" }}
+          className="animate-pop surface-card mt-10 p-5"
+          style={{ animationDelay: "180ms" }}
         >
           <div className="flex items-center gap-2">
             <h2 className="text-[13px] font-medium tracking-wide text-muted-foreground uppercase">
               Hoje
             </h2>
             {next && (
-              <span className="ml-auto inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
-                <Clock className="size-3.5" />
-                Próximo compromisso às {next.time}
+              <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-0.5 text-[11px] text-muted-foreground">
+                <Clock className="size-3" />
+                Próximo às {next.time}
               </span>
             )}
           </div>
@@ -128,21 +129,26 @@ function Home() {
               value={pending.length}
               label={pending.length === 1 ? "tarefa pendente" : "tarefas pendentes"}
               icon={CheckSquare}
+              delay={240}
             />
             <Stat
               value={todayEvents.length}
               label={todayEvents.length === 1 ? "compromisso" : "compromissos"}
               icon={CalendarDays}
+              delay={300}
             />
             <Stat
               value={todayReminders.length}
               label={todayReminders.length === 1 ? "lembrete" : "lembretes"}
               icon={Bell}
+              delay={360}
             />
           </div>
 
-          <div className="mt-5 flex gap-3 rounded-xl bg-primary-soft/25 p-4">
-            <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
+          <div className="mt-5 flex gap-3 rounded-xl border border-primary/20 bg-primary/8 p-4">
+            <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
+              <Sparkles className="size-3.5" />
+            </div>
             <p className="text-[13px] leading-relaxed text-foreground/85">{insight}</p>
           </div>
 
@@ -164,14 +170,19 @@ function Stat({
   value,
   label,
   icon: Icon,
+  delay = 0,
 }: {
   value: number;
   label: string;
   icon: typeof CheckSquare;
+  delay?: number;
 }) {
   return (
-    <div className="rounded-xl bg-surface-2/60 p-4 transition-colors hover:bg-surface-2">
-      <Icon className="size-4 text-muted-foreground" />
+    <div
+      className="lift animate-pop rounded-xl bg-surface-2/60 p-4"
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <Icon className="size-4 text-primary/70" />
       <p className="mt-3 text-2xl font-semibold tabular-nums">{value}</p>
       <p className="mt-0.5 text-[12px] text-muted-foreground">{label}</p>
     </div>

@@ -138,7 +138,7 @@ export function ProposalCard({
   onCancel: () => void;
 }) {
   return (
-    <div className="animate-rise mt-3 max-w-md rounded-xl border border-border-strong bg-surface-2 p-4">
+    <div className="animate-pop mt-3 max-w-md rounded-xl border border-border-strong bg-surface-2 p-4">
       <p className="text-[11px] font-medium tracking-wide text-primary uppercase">
         {KIND_LABEL[proposal.kind]}
       </p>
@@ -198,7 +198,7 @@ export function AssistantMessage({
 }) {
   const isUser = message.role === "user";
   return (
-    <div className={cn("animate-rise flex gap-3", isUser && "justify-end")}>
+    <div className={cn("animate-pop flex gap-3", isUser && "justify-end")}>
       {!isUser && (
         <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
           <Sparkles className="size-3.5" />
@@ -311,7 +311,7 @@ export function Composer({
         onClick={submit}
         disabled={!value.trim()}
         aria-label="Enviar"
-        className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-all duration-200 hover:opacity-90 disabled:bg-secondary disabled:text-muted-foreground"
+        className="press flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground disabled:bg-secondary disabled:text-muted-foreground disabled:transform-none"
       >
         <ArrowUp className="size-4" />
       </button>
@@ -323,15 +323,18 @@ export function QuickAction({
   label,
   icon: Icon,
   onClick,
+  delay,
 }: {
   label: string;
   icon?: LucideIcon;
   onClick: () => void;
+  delay?: number;
 }) {
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-muted-foreground transition-all duration-200 hover:-translate-y-px hover:border-border-strong hover:text-foreground"
+      style={delay !== undefined ? { animationDelay: `${delay}ms` } : undefined}
+      className="press animate-pop inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-muted-foreground hover:border-border-strong hover:text-foreground"
     >
       {Icon && <Icon className="size-3.5" />}
       {label}

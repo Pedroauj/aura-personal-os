@@ -12,7 +12,7 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="animate-rise flex flex-wrap items-end gap-4">
+    <div className="animate-pop flex flex-wrap items-end gap-4">
       <div className="min-w-0 flex-1">
         {eyebrow && <p className="text-[13px] text-muted-foreground">{eyebrow}</p>}
         <h1 className="text-balance-tight mt-1.5 text-2xl font-semibold md:text-3xl">

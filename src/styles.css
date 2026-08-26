@@ -181,10 +181,21 @@
   letter-spacing: -0.02em;
 }
 
-@keyframes rise-in {
+/* Aurora — linguagem de movimento "Elástica"
+ * Substitui animate-rise / animate-soft-pulse.
+ */
+
+:root {
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-press: 0.22s;
+  --dur-enter: 0.46s;
+  --stagger: 90ms;
+}
+
+@keyframes pop-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(14px) scale(0.94);
   }
   to {
     opacity: 1;
@@ -192,20 +203,153 @@
   }
 }
 
+@keyframes shimmer {
+  from {
+    background-position: -160% 0;
+  }
+  to {
+    background-position: 260% 0;
+  }
+}
+
+@keyframes check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes toast-in {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+  }
+  65% {
+    transform: translateY(-3px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Entrada padrão de qualquer bloco de conteúdo.
+   Escalonar com style={{ animationDelay: `${i * 90}ms` }}, no máximo 6 itens. */
+@utility animate-pop {
+  animation: pop-in var(--dur-enter) var(--ease-spring) both;
+}
+
+/* Botões, chips, itens de menu: responde ao toque. */
+@utility press {
+  transition: transform var(--dur-press) var(--ease-spring);
+  &:hover {
+    transform: translateY(-2px) scale(1.03);
+  }
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+/* Cards clicáveis: sobe com sombra. */
+@utility lift {
+  transition:
+    transform var(--dur-press) var(--ease-spring),
+    box-shadow var(--dur-press) ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* Item de menu da sidebar: desliza na horizontal. */
+@utility nudge {
+  transition:
+    transform var(--dur-press) var(--ease-spring),
+    background-color 0.2s ease,
+    color 0.2s ease;
+  &:hover {
+    transform: translateX(3px);
+  }
+}
+
+/* Skeleton de carregamento. */
+@utility skeleton {
+  background: linear-gradient(
+    100deg,
+    var(--surface-2) 30%,
+    color-mix(in oklab, var(--primary) 22%, var(--surface-2)) 50%,
+    var(--surface-2) 70%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.15s ease-in-out infinite;
+  border-radius: var(--radius-lg);
+}
+
+@utility animate-check {
+  animation: check-pop 0.42s var(--ease-spring) both;
+}
+
+@utility animate-toast {
+  animation: toast-in 0.5s var(--ease-spring) both;
+}
+
+/* Barra de progresso: crescer com transform-origin à esquerda. */
+@utility animate-bar {
+  transform-origin: left;
+  animation: bar-grow 0.7s var(--ease-spring) 0.3s both;
+}
+
+/* Pulso suave para indicadores de loading (ex: bolhas do chat). */
 @keyframes soft-pulse {
   0%,
   100% {
-    opacity: 0.5;
+    opacity: 0.3;
+    transform: scale(0.85);
   }
   50% {
     opacity: 1;
+    transform: scale(1);
   }
 }
 
-@utility animate-rise {
-  animation: rise-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+@utility animate-soft-pulse {
+  animation: soft-pulse 1.2s ease-in-out infinite;
 }
 
-@utility animate-soft-pulse {
-  animation: soft-pulse 1.4s ease-in-out infinite;
+/* Acessibilidade: sem deslocamento, só opacidade. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop,
+  .animate-check,
+  .animate-toast,
+  .animate-bar,
+  .animate-soft-pulse {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    opacity: 1;
+    transform: none;
+  }
+  .press,
+  .lift,
+  .nudge {
+    transition: none;
+  }
+  .skeleton {
+    animation: none;
+  }
 }

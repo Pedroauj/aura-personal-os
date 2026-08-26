@@ -79,7 +79,7 @@ function MemoryPage() {
                 {items.map((m) => (
                   <div
                     key={m.id}
-                    className="group surface-card animate-rise flex items-start gap-3 px-4 py-3.5 transition-colors hover:border-border-strong hover:bg-surface-2"
+                    className="lift group surface-card animate-pop flex items-start gap-3 px-4 py-3.5"
                   >
                     <Brain className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     <div className="min-w-0 flex-1">

@@ -72,7 +72,7 @@ function InboxPage() {
             {app.inbox.map((item) => (
               <div
                 key={item.id}
-                className="group surface-card animate-rise flex items-center gap-3 px-4 py-3.5 transition-colors hover:border-border-strong hover:bg-surface-2"
+                className="lift group surface-card animate-pop flex items-center gap-3 px-4 py-3.5"
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-[14px]">{item.content}</p>
