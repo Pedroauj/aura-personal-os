@@ -308,16 +308,18 @@ export function AssistantMessage({
         </div>
       )}
       <div className={cn("max-w-[min(680px,88%)]", isUser && "flex flex-col items-end")}>
-        <div
-          className={cn(
-            "text-[14px] leading-relaxed whitespace-pre-line",
-            isUser
-              ? "rounded-2xl rounded-br-md bg-secondary px-4 py-2.5"
-              : "rounded-2xl rounded-bl-md bg-surface px-4 py-2.5 text-foreground/90",
-          )}
-        >
-          {message.content}
-        </div>
+        {message.content.trim() && (
+          <div
+            className={cn(
+              "text-[14px] leading-relaxed whitespace-pre-line",
+              isUser
+                ? "rounded-2xl rounded-br-md bg-secondary px-4 py-2.5"
+                : "rounded-2xl rounded-bl-md bg-surface px-4 py-2.5 text-foreground/90",
+            )}
+          >
+            {message.content}
+          </div>
+        )}
         {message.proposal && (
           <ProposalCard
             proposal={message.proposal}
