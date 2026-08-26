@@ -10,16 +10,16 @@ export interface Subtask {
 export interface Task {
   id: string;
   title: string;
-  description?: string;
+  description?: string | undefined;
   /** ISO date: yyyy-mm-dd */
-  date?: string;
-  time?: string;
+  date?: string | undefined;
+  time?: string | undefined;
   priority: Priority;
   status: TaskStatus;
-  projectId?: string;
-  category?: string;
+  projectId?: string | undefined;
+  category?: string | undefined;
   subtasks: Subtask[];
-  notes?: string;
+  notes?: string | undefined;
   createdAt: string;
 }
 
@@ -29,10 +29,10 @@ export interface CalendarEvent {
   date: string;
   time: string;
   durationMin: number;
-  description?: string;
+  description?: string | undefined;
   category: string;
-  location?: string;
-  reminderMin?: number;
+  location?: string | undefined;
+  reminderMin?: number | undefined;
 }
 
 export type ReminderRepeat = "once" | "daily" | "weekly" | "monthly";
@@ -70,7 +70,7 @@ export interface Project {
   name: string;
   description: string;
   color: string;
-  deadline?: string;
+  deadline?: string | undefined;
   status: "ativo" | "pausado" | "concluido";
 }
 
@@ -86,8 +86,8 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   createdAt: string;
-  proposal?: Proposal;
-  proposalState?: "pending" | "accepted" | "cancelled";
+  proposal?: Proposal | undefined;
+  proposalState?: "pending" | "accepted" | "cancelled" | undefined;
 }
 
 export type ProposalKind = "task" | "reminder" | "event" | "note" | "memory" | "plan";
@@ -95,7 +95,7 @@ export type ProposalKind = "task" | "reminder" | "event" | "note" | "memory" | "
 export interface Proposal {
   kind: ProposalKind;
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   payload: Record<string, unknown>;
   planItems?: { time: string; title: string }[];
 }
