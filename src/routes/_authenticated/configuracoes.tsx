@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bell, Brain, Cloud, Keyboard, Sparkles, type LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { PageHeader } from "@/components/page-header";
 import { SectionTitle } from "@/components/cards";
 import { ToggleSwitchGlass } from "@/components/ui/toggle-switch-glass";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { disablePush, enablePush, getPushStatus, isIos, isStandalone } from "@/lib/push";
 
 export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () => ({
@@ -50,13 +52,6 @@ const TOGGLE_DEFS: {
     defaultChecked: true,
   },
   {
-    icon: Bell,
-    key: "notifications",
-    title: "Notificações de lembretes",
-    description: "Avisar no horário de cada lembrete.",
-    defaultChecked: true,
-  },
-  {
     icon: Cloud,
     key: "sync",
     title: "Sincronizar calendário externo",
@@ -78,6 +73,30 @@ function SettingsPage() {
   const [toggles, setToggles] = useState<Record<string, boolean>>(
     Object.fromEntries(TOGGLE_DEFS.map((t) => [t.key, t.defaultChecked])),
   );
+  const [push, setPush] = useState({ supported: true, enabled: false, busy: false });
+
+  useEffect(() => {
+    void getPushStatus().then((s) =>
+      setPush({ supported: s.supported, enabled: s.enabled, busy: false }),
+    );
+  }, []);
+
+  const togglePush = async (next: boolean) => {
+    setPush((p) => ({ ...p, busy: true }));
+    try {
+      if (next) {
+        await enablePush();
+        toast.success("Notificações ativadas neste dispositivo");
+      } else {
+        await disablePush();
+        toast.success("Notificações desativadas neste dispositivo");
+      }
+      setPush({ supported: true, enabled: next, busy: false });
+    } catch (err) {
+      setPush((p) => ({ ...p, busy: false }));
+      toast.error(err instanceof Error ? err.message : "Não foi possível alterar");
+    }
+  };
 
   return (
     <div className="mx-auto w-full max-w-2xl px-5 py-8 md:px-8 md:py-12">
@@ -87,6 +106,36 @@ function SettingsPage() {
       />
 
       <div className="mt-8 space-y-2">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={SPRING}
+          className="surface-card"
+        >
+          <div className="flex items-center gap-4 px-4 py-4">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/8">
+              <Bell className="size-4 text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[14px] font-medium">Notificações de lembretes</p>
+              <p className="mt-0.5 text-[13px] text-muted-foreground">
+                {push.supported
+                  ? "Receba um aviso no horário de cada lembrete neste dispositivo."
+                  : "Este navegador não suporta notificações push."}
+                {isIos() && !isStandalone() && push.supported
+                  ? " No iPhone, instale o app na tela de início primeiro."
+                  : ""}
+              </p>
+            </div>
+            <ToggleSwitchGlass
+              checked={push.enabled}
+              onChange={(v) => void togglePush(v)}
+              disabled={!push.supported || push.busy}
+              id="push"
+            />
+          </div>
+        </motion.div>
+
         {TOGGLE_DEFS.map((t, i) => (
           <motion.div
             key={t.key}
