@@ -15,6 +15,19 @@ import {
   addMinutes,
 } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { PrimaryButton } from "@/components/page-header";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
+import type { CalendarEvent } from "@/lib/types";
 
 export const Route = createFileRoute("/_authenticated/calendario")({
   head: () => ({
@@ -44,8 +57,91 @@ function toISO(d: Date) {
   ).padStart(2, "0")}`;
 }
 
+type EventForm = {
+  title: string;
+  date: string;
+  time: string;
+  durationMin: string;
+  category: string;
+  location: string;
+  description: string;
+};
+
+function toForm(e: CalendarEvent): EventForm {
+  return {
+    title: e.title,
+    date: e.date,
+    time: e.time,
+    durationMin: String(e.durationMin),
+    category: e.category,
+    location: e.location ?? "",
+    description: e.description ?? "",
+  };
+}
+
 function CalendarPage() {
-  const { events } = useApp();
+  const { events, addEvent, updateEvent, removeEvent } = useApp();
+  const [editing, setEditing] = useState<CalendarEvent | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState<EventForm | null>(null);
+
+  const openEdit = (e: CalendarEvent) => {
+    setCreating(false);
+    setEditing(e);
+    setForm(toForm(e));
+  };
+
+  const openCreate = (iso: string) => {
+    setEditing(null);
+    setCreating(true);
+    setForm({
+      title: "",
+      date: iso,
+      time: "09:00",
+      durationMin: "60",
+      category: "Geral",
+      location: "",
+      description: "",
+    });
+  };
+
+  const closeDialog = () => {
+    setEditing(null);
+    setCreating(false);
+    setForm(null);
+  };
+
+  const save = () => {
+    if (!form) return;
+    if (!form.title.trim()) {
+      toast.error("Dê um título ao compromisso");
+      return;
+    }
+    const patch = {
+      title: form.title.trim(),
+      date: form.date,
+      time: form.time,
+      durationMin: Number(form.durationMin) || 60,
+      category: form.category.trim() || "Geral",
+      location: form.location.trim() || undefined,
+      description: form.description.trim() || undefined,
+    };
+    if (editing) {
+      updateEvent(editing.id, patch);
+      toast.success("Compromisso atualizado");
+    } else {
+      addEvent(patch);
+      toast.success("Compromisso criado");
+    }
+    closeDialog();
+  };
+
+  const remove = () => {
+    if (!editing) return;
+    removeEvent(editing.id);
+    toast.success("Compromisso removido");
+    closeDialog();
+  };
   const [mode, setMode] = useState<(typeof MODES)[number]>("Dia");
   const [cursor, setCursor] = useState(isoToday());
   const base = parseISODate(cursor);
@@ -84,12 +180,15 @@ function CalendarPage() {
         title="Calendário"
         subtitle="Sua agenda completa. Integrações com Google e Outlook em breve."
         action={
-          <div className="flex gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             {MODES.map((m) => (
               <GhostButton key={m} active={mode === m} onClick={() => setMode(m)}>
                 {m}
               </GhostButton>
             ))}
+            <PrimaryButton onClick={() => openCreate(cursor)}>
+              <Plus className="size-4" /> Novo
+            </PrimaryButton>
           </div>
         }
       />
@@ -143,7 +242,7 @@ function CalendarPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ ...SPRING, delay: i * 0.05 }}
                       >
-                        <EventCard event={e} />
+                        <EventCard event={e} onClick={() => openEdit(e)} />
                         <p className="mt-1 pl-4 text-[11px] text-muted-foreground">
                           até {addMinutes(e.time, e.durationMin)}
                         </p>
@@ -190,13 +289,15 @@ function CalendarPage() {
                   </p>
                   <div className="mt-2 space-y-1.5">
                     {dayEvents(iso).map((e) => (
-                      <div
+                      <button
                         key={e.id}
-                        className="rounded-md bg-primary/12 px-2 py-1 text-[11px] text-foreground/85"
+                        type="button"
+                        onClick={() => openEdit(e)}
+                        className="block w-full rounded-md bg-primary/12 px-2 py-1 text-left text-[11px] text-foreground/85 transition-colors hover:bg-primary/20"
                       >
                         <span className="tabular-nums text-primary">{e.time}</span>{" "}
                         <span className="line-clamp-2">{e.title}</span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -280,6 +381,72 @@ function CalendarPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Dialog
+        open={(editing !== null || creating) && form !== null}
+        onOpenChange={(o) => !o && closeDialog()}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editing ? "Editar compromisso" : "Novo compromisso"}</DialogTitle>
+            <DialogDescription>
+              Ajuste horário, duração, local e detalhes do compromisso.
+            </DialogDescription>
+          </DialogHeader>
+          {form && (
+            <div className="space-y-3">
+              <Input
+                placeholder="Título do compromisso"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="date"
+                  value={form.date}
+                  onChange={(e) => setForm({ ...form, date: e.target.value })}
+                />
+                <Input
+                  type="time"
+                  value={form.time}
+                  onChange={(e) => setForm({ ...form, time: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="number"
+                  min={5}
+                  step={5}
+                  placeholder="Duração (min)"
+                  value={form.durationMin}
+                  onChange={(e) => setForm({ ...form, durationMin: e.target.value })}
+                />
+                <Input
+                  placeholder="Categoria"
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                />
+              </div>
+              <Input
+                placeholder="Local (opcional)"
+                value={form.location}
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+              />
+              <Textarea
+                placeholder="Detalhes (opcional)"
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+              />
+            </div>
+          )}
+          <DialogFooter className="gap-2 sm:justify-between">
+            {editing && <GhostButton onClick={remove}>Excluir</GhostButton>}
+            <PrimaryButton onClick={save}>
+              {editing ? "Salvar alterações" : "Criar compromisso"}
+            </PrimaryButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
