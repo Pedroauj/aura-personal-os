@@ -381,6 +381,72 @@ function CalendarPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Dialog
+        open={(editing !== null || creating) && form !== null}
+        onOpenChange={(o) => !o && closeDialog()}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editing ? "Editar compromisso" : "Novo compromisso"}</DialogTitle>
+            <DialogDescription>
+              Ajuste horário, duração, local e detalhes do compromisso.
+            </DialogDescription>
+          </DialogHeader>
+          {form && (
+            <div className="space-y-3">
+              <Input
+                placeholder="Título do compromisso"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="date"
+                  value={form.date}
+                  onChange={(e) => setForm({ ...form, date: e.target.value })}
+                />
+                <Input
+                  type="time"
+                  value={form.time}
+                  onChange={(e) => setForm({ ...form, time: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="number"
+                  min={5}
+                  step={5}
+                  placeholder="Duração (min)"
+                  value={form.durationMin}
+                  onChange={(e) => setForm({ ...form, durationMin: e.target.value })}
+                />
+                <Input
+                  placeholder="Categoria"
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                />
+              </div>
+              <Input
+                placeholder="Local (opcional)"
+                value={form.location}
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+              />
+              <Textarea
+                placeholder="Detalhes (opcional)"
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+              />
+            </div>
+          )}
+          <DialogFooter className="gap-2 sm:justify-between">
+            {editing && <GhostButton onClick={remove}>Excluir</GhostButton>}
+            <PrimaryButton onClick={save}>
+              {editing ? "Salvar alterações" : "Criar compromisso"}
+            </PrimaryButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
