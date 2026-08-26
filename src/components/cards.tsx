@@ -53,8 +53,8 @@ export function SectionTitle({
   action,
 }: {
   title: string;
-  count?: number;
-  action?: React.ReactNode;
+  count?: number | undefined;
+  action?: React.ReactNode | undefined;
 }) {
   return (
     <div className="mb-3 flex items-center gap-2">
@@ -78,7 +78,7 @@ export function EmptyState({
 }: {
   icon: LucideIcon;
   title: string;
-  description?: string;
+  description?: string | undefined;
 }) {
   return (
     <div className="surface-card flex flex-col items-center justify-center gap-2 px-6 py-12 text-center">
@@ -98,9 +98,9 @@ export function TaskCard({
   onDelete,
 }: {
   task: Task;
-  projectName?: string;
-  onToggle?: () => void;
-  onDelete?: () => void;
+  projectName?: string | undefined;
+  onToggle?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
 }) {
   const done = task.status === "concluido";
   const doneSubs = task.subtasks.filter((s) => s.done).length;
@@ -218,8 +218,8 @@ export function ReminderCard({
   onDelete,
 }: {
   reminder: Reminder;
-  onToggle?: () => void;
-  onDelete?: () => void;
+  onToggle?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
 }) {
   return (
     <div
@@ -326,9 +326,9 @@ export function NoteCard({
   onClick,
 }: {
   note: Note;
-  onPin?: () => void;
-  onDelete?: () => void;
-  onClick?: () => void;
+  onPin?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
+  onClick?: (() => void) | undefined;
 }) {
   return (
     <div

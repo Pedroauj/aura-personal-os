@@ -25,7 +25,7 @@ const MONTHS = [
 
 export function parseISODate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
-  return new Date(y, (m ?? 1) - 1, d ?? 1);
+  return new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1);
 }
 
 export function isoToday() {
@@ -73,7 +73,7 @@ export const weekdayShort = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export function addMinutes(time: string, min: number) {
   const [h, m] = time.split(":").map(Number);
-  const total = h * 60 + m + min;
+  const total = (h ?? 0) * 60 + (m ?? 0) + min;
   const hh = Math.floor((total % 1440) / 60);
   const mm = total % 60;
   return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;

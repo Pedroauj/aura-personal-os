@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useApp, uid } from "@/lib/store";
 import { respond } from "@/lib/assistant";
-import type { ChatMessage, Proposal } from "@/lib/types";
+import { isoToday } from "@/lib/format";
+import type { ChatMessage, MemoryItem, Proposal, Reminder, Task } from "@/lib/types";
 import { USER } from "@/lib/mock-data";
 
 export function useAssistant() {
@@ -48,28 +49,36 @@ export function useAssistant() {
 
   const accept = useCallback(
     (messageId: string, proposal: Proposal) => {
-      const p = proposal.payload as Record<string, string>;
+      const p = proposal.payload as {
+        date?: string;
+        time?: string;
+        priority?: Task["priority"];
+        repeat?: Reminder["repeat"];
+        category?: string;
+        content?: string;
+        kind?: MemoryItem["kind"];
+      };
       switch (proposal.kind) {
         case "task":
           app.addTask({
             title: proposal.title,
             date: p.date,
-            priority: (p.priority as never) ?? "media",
+            priority: p.priority ?? "media",
           });
           break;
         case "reminder":
           app.addReminder({
             title: proposal.title,
-            date: p.date,
-            time: p.time,
-            repeat: (p.repeat as never) ?? "once",
+            date: p.date ?? isoToday(),
+            time: p.time ?? "09:00",
+            repeat: p.repeat ?? "once",
           });
           break;
         case "event":
           app.addEvent({
             title: proposal.title,
-            date: p.date,
-            time: p.time,
+            date: p.date ?? isoToday(),
+            time: p.time ?? "09:00",
             durationMin: 60,
             category: p.category ?? "Geral",
           });
@@ -84,7 +93,7 @@ export function useAssistant() {
         case "memory":
           app.addMemory({
             content: proposal.title,
-            kind: (p.kind as never) ?? "outro",
+            kind: p.kind ?? "outro",
             source: "assistente",
           });
           break;
@@ -92,7 +101,7 @@ export function useAssistant() {
           proposal.planItems?.forEach((item) =>
             app.addEvent({
               title: item.title,
-              date: p.date,
+              date: p.date ?? isoToday(),
               time: item.time,
               durationMin: 60,
               category: "Planejamento",
