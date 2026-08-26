@@ -14,6 +14,7 @@ import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as HojeRouteImport } from './routes/hoje'
 import { Route as LembretesRouteImport } from './routes/lembretes'
+import { Route as NotasRouteImport } from './routes/notas'
 import { Route as TarefasRouteImport } from './routes/tarefas'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const LembretesRoute = LembretesRouteImport.update({
   path: '/lembretes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotasRoute = NotasRouteImport.update({
+  id: '/notas',
+  path: '/notas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TarefasRoute = TarefasRouteImport.update({
   id: '/tarefas',
   path: '/tarefas',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/calendario': typeof CalendarioRoute
   '/hoje': typeof HojeRoute
   '/lembretes': typeof LembretesRoute
+  '/notas': typeof NotasRoute
   '/tarefas': typeof TarefasRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/calendario': typeof CalendarioRoute
   '/hoje': typeof HojeRoute
   '/lembretes': typeof LembretesRoute
+  '/notas': typeof NotasRoute
   '/tarefas': typeof TarefasRoute
 }
 export interface FileRoutesById {
@@ -70,14 +78,28 @@ export interface FileRoutesById {
   '/calendario': typeof CalendarioRoute
   '/hoje': typeof HojeRoute
   '/lembretes': typeof LembretesRoute
+  '/notas': typeof NotasRoute
   '/tarefas': typeof TarefasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/assistente' | '/calendario' | '/hoje' | '/lembretes' | '/tarefas'
+    | '/'
+    | '/assistente'
+    | '/calendario'
+    | '/hoje'
+    | '/lembretes'
+    | '/notas'
+    | '/tarefas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assistente' | '/calendario' | '/hoje' | '/lembretes' | '/tarefas'
+  to:
+    | '/'
+    | '/assistente'
+    | '/calendario'
+    | '/hoje'
+    | '/lembretes'
+    | '/notas'
+    | '/tarefas'
   id:
     | '__root__'
     | '/'
@@ -85,6 +107,7 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/hoje'
     | '/lembretes'
+    | '/notas'
     | '/tarefas'
   fileRoutesById: FileRoutesById
 }
@@ -94,6 +117,7 @@ export interface RootRouteChildren {
   CalendarioRoute: typeof CalendarioRoute
   HojeRoute: typeof HojeRoute
   LembretesRoute: typeof LembretesRoute
+  NotasRoute: typeof NotasRoute
   TarefasRoute: typeof TarefasRoute
 }
 
@@ -134,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LembretesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notas': {
+      id: '/notas'
+      path: '/notas'
+      fullPath: '/notas'
+      preLoaderRoute: typeof NotasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tarefas': {
       id: '/tarefas'
       path: '/tarefas'
@@ -150,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarioRoute: CalendarioRoute,
   HojeRoute: HojeRoute,
   LembretesRoute: LembretesRoute,
+  NotasRoute: NotasRoute,
   TarefasRoute: TarefasRoute,
 }
 export const routeTree = rootRouteImport
