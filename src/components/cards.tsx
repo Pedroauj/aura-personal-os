@@ -99,8 +99,8 @@ export function TaskCard({
 }: {
   task: Task;
   projectName?: string | undefined;
-  onToggle?: () => void | undefined;
-  onDelete?: () => void | undefined;
+  onToggle?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
 }) {
   const done = task.status === "concluido";
   const doneSubs = task.subtasks.filter((s) => s.done).length;
@@ -218,8 +218,8 @@ export function ReminderCard({
   onDelete,
 }: {
   reminder: Reminder;
-  onToggle?: () => void | undefined;
-  onDelete?: () => void | undefined;
+  onToggle?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
 }) {
   return (
     <div
@@ -326,9 +326,9 @@ export function NoteCard({
   onClick,
 }: {
   note: Note;
-  onPin?: () => void | undefined;
-  onDelete?: () => void | undefined;
-  onClick?: () => void | undefined;
+  onPin?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
+  onClick?: (() => void) | undefined;
 }) {
   return (
     <div
