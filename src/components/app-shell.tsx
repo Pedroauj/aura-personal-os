@@ -116,7 +116,7 @@ function VerticalNav({
   );
 }
 
-/* ── Footer links (Settings + Profile) ── */
+/* ── Footer links (Settings + Profile + Sign out) ── */
 function NavFooter({
   collapsed,
   onNavigate,
@@ -124,6 +124,29 @@ function NavFooter({
   collapsed?: boolean;
   onNavigate?: () => void;
 }) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { user } = useSessionUser();
+
+  async function handleSignOut() {
+    onNavigate?.();
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  const displayName =
+    (user?.user_metadata?.["full_name"] as string | undefined) ??
+    user?.email ??
+    USER.fullName;
+  const initials = displayName
+    .split(/[\s@.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? "")
+    .join("");
+
   return (
     <div
       className={cn(
@@ -161,16 +184,27 @@ function NavFooter({
               !collapsed && "mr-2",
             )}
           >
-            {USER.initials}
+            {initials || USER.initials}
           </span>
-          {!collapsed && (
-            <span className="flex-1 truncate">{USER.fullName}</span>
-          )}
+          {!collapsed && <span className="flex-1 truncate">{displayName}</span>}
         </Link>
+      </Button>
+      <Button
+        variant="ghost"
+        onClick={handleSignOut}
+        title="Sair"
+        className={cn(
+          "h-9 w-full text-[13px] font-medium text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+          collapsed ? "justify-center px-0" : "justify-start px-3",
+        )}
+      >
+        <LogOut className={cn("size-[17px] shrink-0", !collapsed && "mr-2")} />
+        {!collapsed && "Sair"}
       </Button>
     </div>
   );
 }
+
 
 /* ── Main shell ── */
 export function AppShell({ children }: { children: ReactNode }) {
