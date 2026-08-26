@@ -122,6 +122,66 @@
   );
 }
 
+/* Light mode — responde ao prefers-color-scheme do sistema */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: oklch(0.98 0 0);
+    --foreground: oklch(0.14 0.002 285);
+    --surface: oklch(0.955 0.002 285);
+    --surface-2: oklch(0.915 0.003 285);
+
+    --card: oklch(0.96 0.001 285);
+    --card-foreground: oklch(0.14 0.002 285);
+    --popover: oklch(0.97 0.001 285);
+    --popover-foreground: oklch(0.14 0.002 285);
+
+    --primary: oklch(0.52 0.19 285);
+    --primary-foreground: oklch(0.99 0 0);
+    --primary-soft: oklch(0.88 0.06 285);
+
+    --secondary: oklch(0.91 0.003 285);
+    --secondary-foreground: oklch(0.2 0.003 285);
+
+    --muted: oklch(0.91 0.003 285);
+    --muted-foreground: oklch(0.5 0.005 285);
+
+    --accent: oklch(0.9 0.005 285);
+    --accent-foreground: oklch(0.14 0.002 285);
+
+    --destructive: oklch(0.54 0.22 22);
+    --destructive-foreground: oklch(0.99 0 0);
+    --success: oklch(0.56 0.16 155);
+    --warning: oklch(0.6 0.16 78);
+    --info: oklch(0.55 0.14 235);
+
+    --border: oklch(0 0 0 / 10%);
+    --border-strong: oklch(0 0 0 / 18%);
+    --input: oklch(0 0 0 / 8%);
+    --ring: oklch(0.52 0.19 285 / 50%);
+
+    --sidebar: oklch(0.965 0.001 285);
+    --sidebar-foreground: oklch(0.18 0.002 285);
+    --sidebar-primary: oklch(0.52 0.19 285);
+    --sidebar-primary-foreground: oklch(0.99 0 0);
+    --sidebar-accent: oklch(0.91 0.003 285);
+    --sidebar-accent-foreground: oklch(0.18 0.002 285);
+    --sidebar-border: oklch(0 0 0 / 8%);
+    --sidebar-ring: oklch(0.52 0.19 285 / 50%);
+
+    --shadow-soft: 0 1px 2px oklch(0 0 0 / 8%), 0 8px 30px oklch(0 0 0 / 5%);
+    --shadow-lift: 0 2px 6px oklch(0 0 0 / 10%), 0 18px 50px oklch(0 0 0 / 7%);
+    --gradient-halo: radial-gradient(
+      60% 60% at 50% 0%,
+      color-mix(in oklab, var(--primary) 12%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  html {
+    color-scheme: light;
+  }
+}
+
 .dark {
   color-scheme: dark;
 }
@@ -129,6 +189,11 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    /* Focus ring global — sobrescrito por componentes que precisam de estilo custom */
+    &:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
+    }
   }
 
   html {
@@ -136,6 +201,7 @@
   }
 
   body {
+    font-size: 15px;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);

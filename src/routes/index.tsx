@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   Bell,
   CalendarDays,
@@ -117,10 +117,13 @@ function Home() {
               Hoje
             </h2>
             {next && (
-              <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-0.5 text-[11px] text-muted-foreground">
+              <Link
+                to="/calendario"
+                className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-0.5 text-[11px] text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground"
+              >
                 <Clock className="size-3" />
                 Próximo às {next.time}
-              </span>
+              </Link>
             )}
           </div>
 
@@ -145,12 +148,18 @@ function Home() {
             />
           </div>
 
-          <div className="mt-5 flex gap-3 rounded-xl border border-primary/20 bg-primary/8 p-4">
+          <button
+            onClick={() => navigate({ to: "/assistente" })}
+            className="mt-5 flex w-full cursor-pointer gap-3 rounded-xl border border-primary/20 bg-primary/8 p-4 text-left transition-colors hover:border-primary/35 hover:bg-primary/12"
+          >
             <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
               <Sparkles className="size-3.5" />
             </div>
-            <p className="text-[13px] leading-relaxed text-foreground/85">{insight}</p>
-          </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] leading-relaxed text-foreground/85">{insight}</p>
+              <p className="mt-1.5 text-[11px] text-primary/70">Clique para conversar com a Aurora →</p>
+            </div>
+          </button>
 
           <div className="mt-4 flex flex-wrap gap-2">
             <QuickAction label="Abrir visão Hoje" onClick={() => navigate({ to: "/hoje" })} />

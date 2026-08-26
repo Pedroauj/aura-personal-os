@@ -20,6 +20,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { USER } from "@/lib/mock-data";
 import { CommandPalette } from "@/components/command-palette";
+import { useApp } from "@/lib/store";
 
 export const NAV_ITEMS = [
   { to: "/", label: "Home", icon: Home },
@@ -46,6 +47,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { inbox } = useApp();
+  const unreadInbox = inbox.filter((i) => !i.processed).length;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -95,7 +98,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button
             onClick={() => setPaletteOpen(true)}
             className={cn(
-              "flex w-full items-center gap-2 rounded-lg bg-secondary/60 px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary",
+              "flex w-full items-center gap-2 rounded-lg bg-secondary px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground",
               collapsed && "justify-center px-0",
             )}
           >
@@ -131,6 +134,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {active && !collapsed && (
                   <span className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-primary" />
                 )}
+                {active && collapsed && (
+                  <span className="absolute right-0.5 top-0.5 size-1.5 rounded-full bg-primary" />
+                )}
                 <item.icon
                   className={cn(
                     "size-[17px] shrink-0 transition-colors",
@@ -161,7 +167,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               collapsed && "justify-center px-0",
             )}
           >
-            <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full bg-primary/20 text-[10px] font-semibold text-primary">
+            <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-primary/15 text-[10px] font-semibold text-primary ring-1 ring-primary/20">
               {USER.initials}
             </span>
             {!collapsed && <span className="truncate">{USER.fullName}</span>}
@@ -189,7 +195,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
           <Link
             to="/perfil"
-            className="flex size-7 items-center justify-center rounded-full bg-primary/20 text-[10px] font-semibold text-primary"
+            className="flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-primary/15 text-[10px] font-semibold text-primary ring-1 ring-primary/20"
           >
             {USER.initials}
           </Link>
@@ -210,7 +216,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                   active ? "text-primary" : "text-muted-foreground",
                 )}
               >
-                <item.icon className="size-[18px]" />
+                <span className="relative">
+                  <item.icon className="size-[18px]" />
+                  {item.to === "/inbox" && unreadInbox > 0 && (
+                    <span className="absolute -right-1 -top-1 flex size-3.5 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-primary-foreground">
+                      {unreadInbox > 9 ? "9+" : unreadInbox}
+                    </span>
+                  )}
+                </span>
                 {item.label}
               </Link>
             );

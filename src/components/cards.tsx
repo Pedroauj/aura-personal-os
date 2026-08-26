@@ -8,6 +8,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { relativeDay } from "@/lib/format";
 import type {
@@ -75,17 +76,31 @@ export function EmptyState({
   icon: Icon,
   title,
   description,
+  action,
 }: {
   icon: LucideIcon;
   title: string;
   description?: string | undefined;
+  action?: { label: string; onClick: () => void } | undefined;
 }) {
   return (
-    <div className="surface-card flex flex-col items-center justify-center gap-2 px-6 py-12 text-center">
-      <Icon className="size-5 text-muted-foreground" />
-      <p className="text-sm font-medium">{title}</p>
-      {description && (
-        <p className="max-w-sm text-[13px] text-muted-foreground">{description}</p>
+    <div className="surface-card flex flex-col items-center justify-center gap-3 px-6 py-12 text-center">
+      <div className="flex size-10 items-center justify-center rounded-xl bg-secondary">
+        <Icon className="size-5 text-muted-foreground" />
+      </div>
+      <div>
+        <p className="text-sm font-medium">{title}</p>
+        {description && (
+          <p className="mt-1 max-w-sm text-[13px] text-muted-foreground">{description}</p>
+        )}
+      </div>
+      {action && (
+        <button
+          onClick={action.onClick}
+          className="press mt-1 rounded-lg bg-primary px-4 py-2 text-[13px] font-medium text-primary-foreground"
+        >
+          {action.label}
+        </button>
       )}
     </div>
   );
@@ -104,6 +119,8 @@ export function TaskCard({
 }) {
   const done = task.status === "concluido";
   const doneSubs = task.subtasks.filter((s) => s.done).length;
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   return (
     <div
       className={cn(
@@ -111,17 +128,19 @@ export function TaskCard({
         done && "opacity-55",
       )}
     >
+      {/* Touch target mínimo 44×44px via padding negativo */}
       <button
         onClick={onToggle}
         aria-label={done ? "Reabrir tarefa" : "Concluir tarefa"}
         className={cn(
-          "mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-md border transition-all duration-200",
+          "relative mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-md border transition-all duration-200",
+          "before:absolute before:-inset-3 before:content-['']",
           done
             ? "border-primary bg-primary text-primary-foreground"
-            : "border-border-strong hover:border-primary",
+            : "border-border-strong hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
         )}
       >
-        {done && <Check className="size-3" />}
+        {done && <Check className="animate-check size-3" />}
       </button>
 
       <div className="min-w-0 flex-1">
@@ -159,13 +178,30 @@ export function TaskCard({
       </div>
 
       {onDelete && (
-        <button
-          onClick={onDelete}
-          aria-label="Excluir tarefa"
-          className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
-        >
-          <Trash2 className="size-3.5" />
-        </button>
+        confirmDelete ? (
+          <div className="animate-pop flex items-center gap-1.5">
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="rounded-md px-2 py-1 text-[11px] text-muted-foreground hover:bg-secondary"
+            >
+              Não
+            </button>
+            <button
+              onClick={() => { onDelete(); setConfirmDelete(false); }}
+              className="rounded-md bg-destructive/15 px-2 py-1 text-[11px] font-medium text-destructive hover:bg-destructive/25"
+            >
+              Sim, excluir
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            aria-label="Excluir tarefa"
+            className="relative rounded-md p-2 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive focus-visible:opacity-100"
+          >
+            <Trash2 className="size-3.5" />
+          </button>
+        )
       )}
     </div>
   );
@@ -221,6 +257,7 @@ export function ReminderCard({
   onToggle?: (() => void) | undefined;
   onDelete?: (() => void) | undefined;
 }) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   return (
     <div
       className={cn(
@@ -254,18 +291,25 @@ export function ReminderCard({
       </div>
       <button
         onClick={onToggle}
-        className="rounded-md px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        className="rounded-md px-2 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       >
         {reminder.done ? "Reabrir" : "Concluir"}
       </button>
       {onDelete && (
-        <button
-          onClick={onDelete}
-          aria-label="Excluir lembrete"
-          className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
-        >
-          <Trash2 className="size-3.5" />
-        </button>
+        confirmDelete ? (
+          <div className="animate-pop flex items-center gap-1.5">
+            <button onClick={() => setConfirmDelete(false)} className="rounded-md px-2 py-1 text-[11px] text-muted-foreground hover:bg-secondary">Não</button>
+            <button onClick={() => { onDelete(); setConfirmDelete(false); }} className="rounded-md bg-destructive/15 px-2 py-1 text-[11px] font-medium text-destructive hover:bg-destructive/25">Excluir</button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            aria-label="Excluir lembrete"
+            className="rounded-md p-2 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive focus-visible:opacity-100"
+          >
+            <Trash2 className="size-3.5" />
+          </button>
+        )
       )}
     </div>
   );
@@ -282,12 +326,11 @@ export function ProjectCard({
 }) {
   const pct = total ? Math.round((done / total) * 100) : 0;
   return (
-    <div className="lift surface-card animate-pop p-5">
+    <div
+      className="lift surface-card animate-pop overflow-hidden p-5"
+      style={{ borderLeft: `3px solid ${project.color}` }}
+    >
       <div className="flex items-center gap-2.5">
-        <span
-          className="size-2.5 rounded-full"
-          style={{ backgroundColor: project.color }}
-        />
         <p className="flex-1 truncate text-[15px] font-medium">{project.name}</p>
         <span className="rounded-md bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground uppercase">
           {project.status}
@@ -319,6 +362,24 @@ export function ProjectCard({
   );
 }
 
+function NoteDeleteButton({ onDelete }: { onDelete: () => void }) {
+  const [confirm, setConfirm] = useState(false);
+  return confirm ? (
+    <div className="animate-pop flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+      <button onClick={() => setConfirm(false)} className="rounded-md px-1.5 py-0.5 text-[11px] text-muted-foreground hover:bg-secondary">Não</button>
+      <button onClick={onDelete} className="rounded-md bg-destructive/15 px-1.5 py-0.5 text-[11px] font-medium text-destructive hover:bg-destructive/25">Sim</button>
+    </div>
+  ) : (
+    <button
+      onClick={(e) => { e.stopPropagation(); setConfirm(true); }}
+      aria-label="Excluir nota"
+      className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive focus-visible:opacity-100"
+    >
+      <Trash2 className="size-3.5" />
+    </button>
+  );
+}
+
 export function NoteCard({
   note,
   onPin,
@@ -338,13 +399,10 @@ export function NoteCard({
       <div className="flex items-start gap-2">
         <p className="flex-1 text-[14px] font-medium">{note.title}</p>
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onPin?.();
-          }}
+          onClick={(e) => { e.stopPropagation(); onPin?.(); }}
           aria-label="Fixar nota"
           className={cn(
-            "rounded-md p-1 transition-colors",
+            "rounded-md p-1.5 transition-colors",
             note.pinned
               ? "text-primary"
               : "text-muted-foreground opacity-0 group-hover:opacity-100",
@@ -353,16 +411,7 @@ export function NoteCard({
           <Pin className="size-3.5" />
         </button>
         {onDelete && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            aria-label="Excluir nota"
-            className="rounded-md p-1 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
-          >
-            <Trash2 className="size-3.5" />
-          </button>
+          <NoteDeleteButton onDelete={onDelete} />
         )}
       </div>
       <p className="mt-2 line-clamp-4 text-[13px] leading-relaxed text-muted-foreground">

@@ -210,7 +210,7 @@ export function AssistantMessage({
             "text-[14px] leading-relaxed whitespace-pre-line",
             isUser
               ? "rounded-2xl rounded-br-md bg-secondary px-4 py-2.5"
-              : "text-foreground/90",
+              : "rounded-2xl rounded-bl-md bg-surface px-4 py-2.5 text-foreground/90",
           )}
         >
           {message.content}
@@ -239,12 +239,12 @@ export function ThinkingBubble() {
       <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
         <Sparkles className="size-3.5" />
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1.5">
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className="animate-soft-pulse size-1.5 rounded-full bg-muted-foreground"
-            style={{ animationDelay: `${i * 0.15}s` }}
+            className="animate-soft-pulse size-2 rounded-full bg-primary/60"
+            style={{ animationDelay: `${i * 150}ms` }}
           />
         ))}
       </div>
@@ -286,7 +286,7 @@ export function Composer({
   return (
     <div
       className={cn(
-        "surface-card flex items-end gap-2 p-2.5 transition-colors focus-within:border-border-strong",
+        "surface-card flex items-end gap-2 p-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/20",
         large && "p-3",
       )}
     >
@@ -324,17 +324,25 @@ export function QuickAction({
   icon: Icon,
   onClick,
   delay,
+  disabled = false,
 }: {
   label: string;
   icon?: LucideIcon;
   onClick: () => void;
   delay?: number;
+  disabled?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       style={delay !== undefined ? { animationDelay: `${delay}ms` } : undefined}
-      className="press animate-pop inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-muted-foreground hover:border-border-strong hover:text-foreground"
+      className={cn(
+        "press animate-pop inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-muted-foreground",
+        "hover:border-border-strong hover:text-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+        "disabled:pointer-events-none disabled:opacity-40",
+      )}
     >
       {Icon && <Icon className="size-3.5" />}
       {label}
