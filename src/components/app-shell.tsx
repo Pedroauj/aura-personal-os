@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { USER } from "@/lib/mock-data";
+import { useCurrentUser } from "@/lib/current-user";
 import { CommandPalette } from "@/components/command-palette";
 import { useApp } from "@/lib/store";
 import { useSessionUser } from "@/hooks/use-session-user";
@@ -132,6 +132,7 @@ function NavFooter({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { user } = useSessionUser();
+  const currentUser = useCurrentUser();
 
   async function handleSignOut() {
     onNavigate?.();
@@ -144,7 +145,7 @@ function NavFooter({
   const displayName =
     (user?.user_metadata?.["full_name"] as string | undefined) ??
     user?.email ??
-    USER.fullName;
+    currentUser.fullName;
   const initials = displayName
     .split(/[\s@.]+/)
     .filter(Boolean)
@@ -189,7 +190,7 @@ function NavFooter({
               !collapsed && "mr-2",
             )}
           >
-            {initials || USER.initials}
+            {initials || currentUser.initials}
           </span>
           {!collapsed && <span className="flex-1 truncate">{displayName}</span>}
         </Link>
@@ -218,6 +219,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { inbox } = useApp();
+  const currentUser = useCurrentUser();
   const unreadInbox = inbox.filter((i) => !i.processed).length;
 
   useEffect(() => {
@@ -314,7 +316,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         {/* Mobile header */}
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-white/[0.07] bg-background/75 px-4 backdrop-blur-2xl md:hidden">
+        <header className="sticky top-0 z-20 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center gap-3 border-b border-white/[0.07] bg-background/75 px-4 pt-[env(safe-area-inset-top)] backdrop-blur-2xl md:hidden">
           {/* Sheet trigger — opens full nav on mobile */}
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
@@ -366,7 +368,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             to="/perfil"
             className="flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-primary/15 text-[10px] font-semibold text-primary ring-1 ring-primary/20"
           >
-            {USER.initials}
+            {currentUser.initials}
           </Link>
         </header>
 

@@ -12,7 +12,7 @@ import { Composer, QuickAction, useAssistant } from "@/components/assistant";
 import { useApp } from "@/lib/store";
 import { dailyInsight } from "@/lib/assistant";
 import { greeting, isoToday, longDate } from "@/lib/format";
-import { USER } from "@/lib/mock-data";
+import { useCurrentUser } from "@/lib/current-user";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -49,6 +49,7 @@ const SUGGESTIONS = [
 function Home() {
   const navigate = useNavigate();
   const app = useApp();
+  const user = useCurrentUser();
   const { send } = useAssistant();
   const today = isoToday();
 
@@ -86,7 +87,8 @@ function Home() {
         <div className="animate-pop">
           <p className="text-[13px] text-muted-foreground">{longDate(today)}</p>
           <h1 className="text-balance-tight mt-3 text-4xl font-semibold tracking-tight md:text-5xl">
-            {greeting()}, {USER.name}.
+            {greeting()}
+            {user.name ? `, ${user.name}` : ""}.
           </h1>
           <p className="mt-2 text-lg text-muted-foreground md:text-xl">
             O que vamos resolver hoje?

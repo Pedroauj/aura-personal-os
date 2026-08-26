@@ -6,7 +6,7 @@ import { useApp, uid } from "@/lib/store";
 import { respond } from "@/lib/assistant";
 import { isoToday } from "@/lib/format";
 import type { ChatMessage, MemoryItem, Proposal, Reminder, Task } from "@/lib/types";
-import { USER } from "@/lib/mock-data";
+import { useCurrentUser } from "@/lib/current-user";
 
 export function useAssistant() {
   const app = useApp();
@@ -197,6 +197,7 @@ export function AssistantMessage({
   onCancel: () => void;
 }) {
   const isUser = message.role === "user";
+  const { initials } = useCurrentUser();
   return (
     <div className={cn("animate-pop flex gap-3", isUser && "justify-end")}>
       {!isUser && (
@@ -226,7 +227,7 @@ export function AssistantMessage({
       </div>
       {isUser && (
         <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-secondary text-[10px] font-semibold">
-          {USER.initials}
+          {initials}
         </div>
       )}
     </div>

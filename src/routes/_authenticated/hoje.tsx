@@ -4,7 +4,7 @@ import { EmptyState, EventCard, SectionTitle, TaskCard } from "@/components/card
 import { useApp } from "@/lib/store";
 import { dailyInsight } from "@/lib/assistant";
 import { greeting, isoToday, longDate } from "@/lib/format";
-import { USER } from "@/lib/mock-data";
+import { useCurrentUser } from "@/lib/current-user";
 import { PageHeader } from "@/components/page-header";
 
 export const Route = createFileRoute("/_authenticated/hoje")({
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/hoje")({
 
 function TodayPage() {
   const app = useApp();
+  const user = useCurrentUser();
   const today = isoToday();
 
   const events = app.events
@@ -59,7 +60,7 @@ function TodayPage() {
     <div className="mx-auto w-full max-w-5xl px-5 py-8 md:px-8 md:py-12">
       <PageHeader
         eyebrow={longDate(today)}
-        title={`${greeting()}, ${USER.name}.`}
+        title={`${greeting()}${user.name ? `, ${user.name}` : ""}.`}
         subtitle="Este é o seu painel do dia."
       />
 

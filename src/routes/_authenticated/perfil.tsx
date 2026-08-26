@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
 import { SectionTitle } from "@/components/cards";
 import { useApp } from "@/lib/store";
-import { USER } from "@/lib/mock-data";
+import { useCurrentUser } from "@/lib/current-user";
 
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/perfil")({
 
 function ProfilePage() {
   const app = useApp();
+  const user = useCurrentUser();
   const stats = [
     { label: "Tarefas", value: app.tasks.length },
     { label: "Compromissos", value: app.events.length },
@@ -39,11 +40,11 @@ function ProfilePage() {
 
       <div className="surface-card mt-8 flex items-center gap-4 p-5">
         <div className="flex size-14 items-center justify-center rounded-full bg-primary/18 text-[15px] font-semibold text-primary">
-          {USER.initials}
+          {user.initials}
         </div>
         <div className="min-w-0">
-          <p className="text-[16px] font-medium">{USER.fullName}</p>
-          <p className="text-[13px] text-muted-foreground">{USER.email}</p>
+          <p className="text-[16px] font-medium">{user.fullName}</p>
+          <p className="text-[13px] text-muted-foreground">{user.email}</p>
         </div>
       </div>
 
