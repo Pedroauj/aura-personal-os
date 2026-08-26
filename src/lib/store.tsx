@@ -2,11 +2,11 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
-import * as seed from "./mock-data";
 import type {
   CalendarEvent,
   ChatMessage,
@@ -21,6 +21,36 @@ import { isoToday } from "./format";
 
 let counter = 0;
 export const uid = (prefix = "id") => `${prefix}_${Date.now().toString(36)}_${counter++}`;
+
+const STORAGE_PREFIX = "aurora:";
+
+/** Estado persistido no dispositivo do usuário (sem dados de exemplo). */
+function usePersistentState<T>(key: string, initial: T) {
+  const [value, setValue] = useState<T>(initial);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_PREFIX + key);
+      if (raw) setValue(JSON.parse(raw) as T);
+    } catch {
+      /* armazenamento indisponível */
+    }
+    setHydrated(true);
+  }, [key]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
+    } catch {
+      /* armazenamento indisponível */
+    }
+  }, [key, value, hydrated]);
+
+  return [value, setValue] as const;
+}
+
 
 interface AppState {
   tasks: Task[];
