@@ -314,7 +314,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         {/* Mobile header */}
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-white/[0.07] bg-background/75 px-4 backdrop-blur-2xl md:hidden">
+        <header className="sticky top-0 z-20 flex min-h-14 items-center gap-3 border-b border-white/[0.07] bg-background/75 px-4 pt-[env(safe-area-inset-top)] pb-0 backdrop-blur-2xl md:hidden [&>*]:my-2">
           {/* Sheet trigger — opens full nav on mobile */}
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
