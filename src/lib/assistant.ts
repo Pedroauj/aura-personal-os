@@ -56,9 +56,9 @@ export function detectTime(text: string): string {
     return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   }
   const hm = t.match(/\b(\d{1,2})[:h](\d{2})\b/);
-  if (hm) return `${hm[1].padStart(2, "0")}:${hm[2]}`;
+  if (hm) return `${(hm[1] ?? "0").padStart(2, "0")}:${hm[2] ?? "00"}`;
   const h = t.match(/\b(?:[àa]s|as)\s*(\d{1,2})\s*(?:h|horas)?\b/);
-  if (h) return `${h[1].padStart(2, "0")}:00`;
+  if (h) return `${(h[1] ?? "0").padStart(2, "0")}:00`;
   if (/manh[ãa]/.test(t)) return "09:00";
   if (/tarde/.test(t)) return "14:00";
   if (/noite/.test(t)) return "20:00";
@@ -190,7 +190,7 @@ export function respond(input: string, ctx: AssistantContext): AssistantReply {
     const planItems: { time: string; title: string }[] = [];
     evs.forEach((e) => planItems.push({ time: e.time, title: e.title }));
     tks.forEach((task, i) =>
-      planItems.push({ time: slots[i % slots.length], title: task.title }),
+      planItems.push({ time: slots[i % slots.length] ?? "09:00", title: task.title }),
     );
     planItems.sort((a, b) => a.time.localeCompare(b.time));
     return {

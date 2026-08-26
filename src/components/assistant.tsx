@@ -48,13 +48,21 @@ export function useAssistant() {
 
   const accept = useCallback(
     (messageId: string, proposal: Proposal) => {
-      const p = proposal.payload as Record<string, string>;
+      const p = proposal.payload as {
+        date?: string;
+        time?: string;
+        priority?: Task["priority"];
+        repeat?: Reminder["repeat"];
+        category?: string;
+        content?: string;
+        kind?: MemoryItem["kind"];
+      };
       switch (proposal.kind) {
         case "task":
           app.addTask({
             title: proposal.title,
             date: p.date,
-            priority: (p.priority as never) ?? "media",
+            priority: p.priority ?? "media",
           });
           break;
         case "reminder":
@@ -62,7 +70,7 @@ export function useAssistant() {
             title: proposal.title,
             date: p.date,
             time: p.time,
-            repeat: (p.repeat as never) ?? "once",
+            repeat: p.repeat ?? "once",
           });
           break;
         case "event":
@@ -84,7 +92,7 @@ export function useAssistant() {
         case "memory":
           app.addMemory({
             content: proposal.title,
-            kind: (p.kind as never) ?? "outro",
+            kind: p.kind ?? "outro",
             source: "assistente",
           });
           break;
