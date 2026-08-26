@@ -8,7 +8,7 @@ import { ToggleSwitchGlass } from "@/components/ui/toggle-switch-glass";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/configuracoes")({
+export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () => ({
     meta: [
       { title: "Configurações — Aurora" },

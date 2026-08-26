@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/tarefas")({
+export const Route = createFileRoute("/_authenticated/tarefas")({
   head: () => ({
     meta: [
       { title: "Tarefas — Aurora" },

@@ -10,7 +10,7 @@ import {
 } from "@/components/assistant";
 import { useApp } from "@/lib/store";
 
-export const Route = createFileRoute("/assistente")({
+export const Route = createFileRoute("/_authenticated/assistente")({
   head: () => ({
     meta: [
       { title: "Assistente — Aurora" },

@@ -14,7 +14,7 @@ import { dailyInsight } from "@/lib/assistant";
 import { greeting, isoToday, longDate } from "@/lib/format";
 import { USER } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Aurora — Sua assistente pessoal com IA" },

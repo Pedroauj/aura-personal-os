@@ -7,7 +7,7 @@ import { useApp } from "@/lib/store";
 import { relativeDay } from "@/lib/format";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/inbox")({
+export const Route = createFileRoute("/_authenticated/inbox")({
   head: () => ({
     meta: [
       { title: "Inbox — Aurora" },

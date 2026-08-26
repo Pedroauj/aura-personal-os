@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/lembretes")({
+export const Route = createFileRoute("/_authenticated/lembretes")({
   head: () => ({
     meta: [
       { title: "Lembretes — Aurora" },

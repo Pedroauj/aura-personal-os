@@ -4,7 +4,7 @@ import { SectionTitle } from "@/components/cards";
 import { useApp } from "@/lib/store";
 import { USER } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/perfil")({
+export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
     meta: [
       { title: "Perfil — Aurora" },

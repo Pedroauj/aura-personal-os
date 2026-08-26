@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/projetos")({
+export const Route = createFileRoute("/_authenticated/projetos")({
   head: () => ({
     meta: [
       { title: "Projetos — Aurora" },
