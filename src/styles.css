@@ -180,6 +180,11 @@
   html {
     color-scheme: light;
   }
+
+  /* Grid de pontos em light mode usa cor escura */
+  .dot-grid {
+    background-image: radial-gradient(circle, oklch(0 0 0 / 5%) 1px, transparent 1px);
+  }
 }
 
 .dark {
@@ -379,6 +384,22 @@
 @utility animate-bar {
   transform-origin: left;
   animation: bar-grow 0.7s var(--ease-spring) 0.3s both;
+}
+
+/* Grid de pontos que desliza suavemente — faz o background parecer vivo. */
+@keyframes grid-drift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 24px 24px;
+  }
+}
+
+@utility dot-grid {
+  background-image: radial-gradient(circle, oklch(1 0 0 / 6%) 1px, transparent 1px);
+  background-size: 24px 24px;
+  animation: grid-drift 12s linear infinite;
 }
 
 /* Pulso suave para indicadores de loading (ex: bolhas do chat). */
