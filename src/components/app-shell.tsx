@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { USER } from "@/lib/mock-data";
+import { useCurrentUser } from "@/lib/current-user";
 import { CommandPalette } from "@/components/command-palette";
 import { useApp } from "@/lib/store";
 import { useSessionUser } from "@/hooks/use-session-user";
@@ -144,7 +144,7 @@ function NavFooter({
   const displayName =
     (user?.user_metadata?.["full_name"] as string | undefined) ??
     user?.email ??
-    USER.fullName;
+    currentUser.fullName;
   const initials = displayName
     .split(/[\s@.]+/)
     .filter(Boolean)
@@ -189,7 +189,7 @@ function NavFooter({
               !collapsed && "mr-2",
             )}
           >
-            {initials || USER.initials}
+            {initials || currentUser.initials}
           </span>
           {!collapsed && <span className="flex-1 truncate">{displayName}</span>}
         </Link>
@@ -366,7 +366,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             to="/perfil"
             className="flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-primary/15 text-[10px] font-semibold text-primary ring-1 ring-primary/20"
           >
-            {USER.initials}
+            {currentUser.initials}
           </Link>
         </header>
 
