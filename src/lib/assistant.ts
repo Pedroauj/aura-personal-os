@@ -74,23 +74,70 @@ export function detectPriority(text: string): Task["priority"] {
 }
 
 function cleanTitle(text: string) {
-  let t = text.trim();
-  t = t.replace(
-    /^(me\s+)?(lembra|lembre|lembrar|cria|criar|crie|adiciona|adicionar|marca|marcar|anota|anotar|agenda|agendar|salva|salvar)\s*(me\s+)?(de\s+|que\s+|uma\s+|um\s+|para\s+|pra\s+)?/i,
-    "",
-  );
-  t = t.replace(
-    /\s*(hoje|amanh[ãa]|depois de amanh[ãa]|na pr[óo]xima semana|semana que vem|toda?s? os? dias?|todo dia \d{1,2}|toda semana|todo m[êe]s)\b/gi,
-    "",
-  );
-  t = t.replace(/\s*\b(?:[àa]s|as)\s*\d{1,2}([:h]\d{2})?\s*(h|horas)?\b/gi, "");
-  t = t.replace(/\s*daqui\s*(a)?\s*\d{1,3}\s*(minutos?|min|horas?|h)\b/gi, "");
-  t = t.replace(
-    /\s*\b(segunda|ter[çc]a|quarta|quinta|sexta|s[áa]bado|domingo)(-feira)?\b/gi,
-    "",
-  );
+  // Operate on the original-cased text, padded with spaces so each "token"
+  // is whitespace-bounded. \b word boundaries break on accented chars (ã/à),
+  // so we use lookarounds on \S instead — this also preserves proper case
+  // (API, PIX, Rust, Marcos) and strips filler/temporal noise cleanly.
+  let t = " " + text.trim() + " ";
+
+  // 1. Strip the leading command phrase: command verbs + filler words, one
+  //    token at a time, until the real action is reached.
+  //    e.g. "marcar uma tarefa pra eu pesquisar..." -> "pesquisar..."
+  //    Event nouns (reunião, compromisso, consulta) are kept as subjects.
+  const verbs = [
+    "lembrar", "lembrete", "lembre", "lembra", "adicionar", "adiciona",
+    "anotar", "anota", "agendar", "agenda", "salvar", "salva", "criar",
+    "crie", "cria", "marcar", "marca", "quero", "preciso",
+  ];
+  const filler = [
+    "me", "uma", "um", "a", "o", "tarefa", "tarefas", "nota", "notas",
+    "lembrete", "lembretes", "pra", "para", "que", "de", "eu", "mim", "sobre",
+  ];
+  // A token may be followed by whitespace or punctuation ("tarefa:").
+  const endTok = "(?![^\\s,;:.-])";
+  let changed = true;
+  let guard = 0;
+  while (changed && guard++ < 40) {
+    changed = false;
+    for (const list of [verbs, filler]) {
+      for (const w of list) {
+        const re = new RegExp("^\\s" + w + endTok, "i");
+        if (re.test(t)) {
+          t = t.replace(re, "");
+          changed = true;
+          break;
+        }
+      }
+      if (changed) break;
+    }
+  }
+  // Remove a leftover leading punctuation mark (e.g. "tarefa:" -> ":").
+  t = t.replace(/^\s*[:;,-.]+\s*/, " ");
+
+  // 2. Strip temporal expressions (whitespace-bounded, accent-safe).
+  const strip = [
+    /(?<=\s)depois\s+de\s+amanh[ãa](?=\s)/gi,
+    /(?<=\s)amanh[ãa]\s+(?:de\s+|a\s+)?(?:manh[ãa]|tarde|noite)(?=\s)/gi,
+    /(?<=\s)hoje\s+(?:de\s+|a\s+)?(?:manh[ãa]|tarde|noite)(?=\s)/gi,
+    /(?<=\s)de\s+(?:manh[ãa]|tarde|noite)(?=\s)/gi,
+    /(?<=\s)a\s+(?:manh[ãa]|tarde|noite)(?=\s)/gi,
+    /(?<=\s)(?:hoje|amanh[ãa])(?=\s)/gi,
+    /(?<=\s)(?:na\s+pr[óo]xima\s+semana|semana\s+que\s+vem)(?=\s)/gi,
+    /(?<=\s)(?:toda\s+semana|todo\s+m[êe]s|todo\s+dia\s+\d{1,2}|todas?\s+os?\s+dias?)(?=\s)/gi,
+    /(?<=\s)(?:segunda|ter[çc]a|quarta|quinta|sexta|s[áa]bado|domingo)(?:-feira)?(?=\s)/gi,
+    /(?<=\s)(?:às|as)\s+\d{1,2}(?:[:h]\d{2})?\s*(?:h|horas)?(?=\s)/gi,
+    /(?<=\s)daqui\s+(?:a\s+)?\d{1,3}\s*(?:minutos?|min|horas?|h)(?=\s)/gi,
+    /(?<=\s)\d{1,2}[:h]\d{2}\s*(?:h|horas)?(?=\s)/gi,
+    /(?<=\s)\d{1,2}\s*(?:h|horas)(?=\s)/gi,
+  ];
+  for (const re of strip) t = t.replace(re, " ");
+
+  // 3. Trim leftover connectors / punctuation.
+  t = t.replace(/^[,\s;:.]+|[,;:.]+$/g, "");
+  t = t.replace(/\s+\b(?:e|ou)\b\s*$/gi, "");
   t = t.replace(/\s{2,}/g, " ").trim();
-  t = t.replace(/[.,;]+$/, "");
+
+  if (!t) return text.trim();
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
