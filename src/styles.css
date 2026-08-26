@@ -521,3 +521,17 @@
     animation: none;
   }
 }
+
+/*
+ * iOS: inputs com font-size < 16px disparam auto-zoom ao focar.
+ * Trava o zoom no mobile garantindo >=16px em todo campo de formulário.
+ */
+@supports (font: 16px) {
+  @media (max-width: 1024px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+}
