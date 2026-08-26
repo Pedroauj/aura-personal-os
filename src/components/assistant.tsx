@@ -153,6 +153,7 @@ export function useAssistant() {
       const p = proposal.payload as {
         date?: string;
         time?: string;
+        durationMin?: number;
         priority?: Task["priority"];
         repeat?: Reminder["repeat"];
         category?: string;
