@@ -1,4 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   CalendarDays,
   Bell,
@@ -7,6 +8,7 @@ import {
   FolderKanban,
   Home,
   Inbox,
+  LogOut,
   Menu,
   Search,
   Settings,
@@ -19,9 +21,12 @@ import { cn } from "@/lib/utils";
 import { USER } from "@/lib/mock-data";
 import { CommandPalette } from "@/components/command-palette";
 import { useApp } from "@/lib/store";
+import { useSessionUser } from "@/hooks/use-session-user";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 
 export const NAV_ITEMS = [
   { to: "/", label: "Home", icon: Home },
