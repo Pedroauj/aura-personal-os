@@ -132,6 +132,7 @@ function NavFooter({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { user } = useSessionUser();
+  const currentUser = useCurrentUser();
 
   async function handleSignOut() {
     onNavigate?.();
@@ -218,6 +219,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { inbox } = useApp();
+  const currentUser = useCurrentUser();
   const unreadInbox = inbox.filter((i) => !i.processed).length;
 
   useEffect(() => {

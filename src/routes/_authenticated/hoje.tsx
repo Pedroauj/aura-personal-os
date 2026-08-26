@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/hoje")({
 
 function TodayPage() {
   const app = useApp();
+  const user = useCurrentUser();
   const today = isoToday();
 
   const events = app.events

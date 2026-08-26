@@ -197,6 +197,7 @@ export function AssistantMessage({
   onCancel: () => void;
 }) {
   const isUser = message.role === "user";
+  const { initials } = useCurrentUser();
   return (
     <div className={cn("animate-pop flex gap-3", isUser && "justify-end")}>
       {!isUser && (

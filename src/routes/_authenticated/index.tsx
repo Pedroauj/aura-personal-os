@@ -49,6 +49,7 @@ const SUGGESTIONS = [
 function Home() {
   const navigate = useNavigate();
   const app = useApp();
+  const user = useCurrentUser();
   const { send } = useAssistant();
   const today = isoToday();
 
