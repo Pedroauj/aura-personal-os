@@ -26,6 +26,8 @@ export interface AppContextValue extends AppState {
   toggleTask: (id: string) => void;
   removeTask: (id: string) => void;
   addEvent: (e: Partial<CalendarEvent> & { title: string }) => CalendarEvent;
+  updateEvent: (id: string, patch: Partial<CalendarEvent>) => void;
+  removeEvent: (id: string) => void;
   addReminder: (r: Partial<Reminder> & { title: string }) => Reminder;
   toggleReminder: (id: string) => void;
   removeReminder: (id: string) => void;

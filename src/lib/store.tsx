@@ -135,6 +135,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return ev;
   }, []);
 
+  const updateEvent = useCallback((id: string, patch: Partial<CalendarEvent>) => {
+    setEvents((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)));
+  }, []);
+
+  const removeEvent = useCallback(
+    (id: string) => setEvents((prev) => prev.filter((e) => e.id !== id)),
+    [],
+  );
+
   const addReminder = useCallback((r: Partial<Reminder> & { title: string }) => {
     const rem: Reminder = {
       id: crypto.randomUUID(),
@@ -290,6 +299,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       toggleTask,
       removeTask,
       addEvent,
+      updateEvent,
+      removeEvent,
       addReminder,
       toggleReminder,
       removeReminder,
@@ -320,6 +331,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       toggleTask,
       removeTask,
       addEvent,
+      updateEvent,
+      removeEvent,
       addReminder,
       toggleReminder,
       removeReminder,

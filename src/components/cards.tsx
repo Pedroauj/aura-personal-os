@@ -207,9 +207,29 @@ export function TaskCard({
   );
 }
 
-export function EventCard({ event }: { event: CalendarEvent }) {
+export function EventCard({
+  event,
+  onClick,
+}: {
+  event: CalendarEvent;
+  onClick?: (() => void) | undefined;
+}) {
   return (
-    <div className="lift surface-card animate-pop px-4 py-3.5">
+    <div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={(ev) => {
+        if (onClick && (ev.key === "Enter" || ev.key === " ")) {
+          ev.preventDefault();
+          onClick();
+        }
+      }}
+      className={cn(
+        "lift surface-card animate-pop px-4 py-3.5",
+        onClick && "cursor-pointer transition-colors hover:border-primary/40",
+      )}
+    >
       <div className="flex items-start gap-3">
         <div className="w-14 shrink-0">
           <p className="text-[13px] font-semibold tabular-nums">{event.time}</p>
