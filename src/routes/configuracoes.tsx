@@ -110,7 +110,7 @@ function SettingsPage() {
               <ToggleSwitchGlass
                 checked={toggles[t.key] ?? false}
                 onChange={(v) => setToggles((prev) => ({ ...prev, [t.key]: v }))}
-                disabled={t.disabled}
+                disabled={t.disabled ?? false}
                 id={t.key}
               />
             </div>
