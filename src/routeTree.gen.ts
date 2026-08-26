@@ -9,127 +9,127 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AssistenteRouteImport } from './routes/assistente'
-import { Route as CalendarioRouteImport } from './routes/calendario'
-import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as HojeRouteImport } from './routes/hoje'
-import { Route as InboxRouteImport } from './routes/inbox'
-import { Route as LembretesRouteImport } from './routes/lembretes'
-import { Route as MemoriaRouteImport } from './routes/memoria'
-import { Route as NotasRouteImport } from './routes/notas'
-import { Route as PerfilRouteImport } from './routes/perfil'
-import { Route as ProjetosRouteImport } from './routes/projetos'
-import { Route as TarefasRouteImport } from './routes/tarefas'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedAssistenteRouteImport } from './routes/_authenticated/assistente'
+import { Route as AuthenticatedCalendarioRouteImport } from './routes/_authenticated/calendario'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedHojeRouteImport } from './routes/_authenticated/hoje'
+import { Route as AuthenticatedInboxRouteImport } from './routes/_authenticated/inbox'
+import { Route as AuthenticatedLembretesRouteImport } from './routes/_authenticated/lembretes'
+import { Route as AuthenticatedMemoriaRouteImport } from './routes/_authenticated/memoria'
+import { Route as AuthenticatedNotasRouteImport } from './routes/_authenticated/notas'
+import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as AuthenticatedProjetosRouteImport } from './routes/_authenticated/projetos'
+import { Route as AuthenticatedTarefasRouteImport } from './routes/_authenticated/tarefas'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/_authenticated/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AssistenteRoute = AssistenteRouteImport.update({
-  id: '/assistente',
+const AuthenticatedAssistenteRoute = AuthenticatedAssistenteRouteImport.update({
+  id: '/_authenticated/assistente',
   path: '/assistente',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CalendarioRoute = CalendarioRouteImport.update({
-  id: '/calendario',
+const AuthenticatedCalendarioRoute = AuthenticatedCalendarioRouteImport.update({
+  id: '/_authenticated/calendario',
   path: '/calendario',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
-  id: '/configuracoes',
-  path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HojeRoute = HojeRouteImport.update({
-  id: '/hoje',
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/_authenticated/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedHojeRoute = AuthenticatedHojeRouteImport.update({
+  id: '/_authenticated/hoje',
   path: '/hoje',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InboxRoute = InboxRouteImport.update({
-  id: '/inbox',
+const AuthenticatedInboxRoute = AuthenticatedInboxRouteImport.update({
+  id: '/_authenticated/inbox',
   path: '/inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LembretesRoute = LembretesRouteImport.update({
-  id: '/lembretes',
+const AuthenticatedLembretesRoute = AuthenticatedLembretesRouteImport.update({
+  id: '/_authenticated/lembretes',
   path: '/lembretes',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MemoriaRoute = MemoriaRouteImport.update({
-  id: '/memoria',
+const AuthenticatedMemoriaRoute = AuthenticatedMemoriaRouteImport.update({
+  id: '/_authenticated/memoria',
   path: '/memoria',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NotasRoute = NotasRouteImport.update({
-  id: '/notas',
+const AuthenticatedNotasRoute = AuthenticatedNotasRouteImport.update({
+  id: '/_authenticated/notas',
   path: '/notas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PerfilRoute = PerfilRouteImport.update({
-  id: '/perfil',
+const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+  id: '/_authenticated/perfil',
   path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjetosRoute = ProjetosRouteImport.update({
-  id: '/projetos',
+const AuthenticatedProjetosRoute = AuthenticatedProjetosRouteImport.update({
+  id: '/_authenticated/projetos',
   path: '/projetos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TarefasRoute = TarefasRouteImport.update({
-  id: '/tarefas',
+const AuthenticatedTarefasRoute = AuthenticatedTarefasRouteImport.update({
+  id: '/_authenticated/tarefas',
   path: '/tarefas',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/assistente': typeof AssistenteRoute
-  '/calendario': typeof CalendarioRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/hoje': typeof HojeRoute
-  '/inbox': typeof InboxRoute
-  '/lembretes': typeof LembretesRoute
-  '/memoria': typeof MemoriaRoute
-  '/notas': typeof NotasRoute
-  '/perfil': typeof PerfilRoute
-  '/projetos': typeof ProjetosRoute
-  '/tarefas': typeof TarefasRoute
+  '/assistente': typeof AuthenticatedAssistenteRoute
+  '/calendario': typeof AuthenticatedCalendarioRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/hoje': typeof AuthenticatedHojeRoute
+  '/inbox': typeof AuthenticatedInboxRoute
+  '/lembretes': typeof AuthenticatedLembretesRoute
+  '/memoria': typeof AuthenticatedMemoriaRoute
+  '/notas': typeof AuthenticatedNotasRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
+  '/projetos': typeof AuthenticatedProjetosRoute
+  '/tarefas': typeof AuthenticatedTarefasRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/assistente': typeof AssistenteRoute
-  '/calendario': typeof CalendarioRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/hoje': typeof HojeRoute
-  '/inbox': typeof InboxRoute
-  '/lembretes': typeof LembretesRoute
-  '/memoria': typeof MemoriaRoute
-  '/notas': typeof NotasRoute
-  '/perfil': typeof PerfilRoute
-  '/projetos': typeof ProjetosRoute
-  '/tarefas': typeof TarefasRoute
+  '/assistente': typeof AuthenticatedAssistenteRoute
+  '/calendario': typeof AuthenticatedCalendarioRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/hoje': typeof AuthenticatedHojeRoute
+  '/inbox': typeof AuthenticatedInboxRoute
+  '/lembretes': typeof AuthenticatedLembretesRoute
+  '/memoria': typeof AuthenticatedMemoriaRoute
+  '/notas': typeof AuthenticatedNotasRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
+  '/projetos': typeof AuthenticatedProjetosRoute
+  '/tarefas': typeof AuthenticatedTarefasRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/assistente': typeof AssistenteRoute
-  '/calendario': typeof CalendarioRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/hoje': typeof HojeRoute
-  '/inbox': typeof InboxRoute
-  '/lembretes': typeof LembretesRoute
-  '/memoria': typeof MemoriaRoute
-  '/notas': typeof NotasRoute
-  '/perfil': typeof PerfilRoute
-  '/projetos': typeof ProjetosRoute
-  '/tarefas': typeof TarefasRoute
+  '/_authenticated/assistente': typeof AuthenticatedAssistenteRoute
+  '/_authenticated/calendario': typeof AuthenticatedCalendarioRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/_authenticated/hoje': typeof AuthenticatedHojeRoute
+  '/_authenticated/inbox': typeof AuthenticatedInboxRoute
+  '/_authenticated/lembretes': typeof AuthenticatedLembretesRoute
+  '/_authenticated/memoria': typeof AuthenticatedMemoriaRoute
+  '/_authenticated/notas': typeof AuthenticatedNotasRoute
+  '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/projetos': typeof AuthenticatedProjetosRoute
+  '/_authenticated/tarefas': typeof AuthenticatedTarefasRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/assistente'
     | '/calendario'
     | '/configuracoes'
@@ -141,9 +141,9 @@ export interface FileRouteTypes {
     | '/perfil'
     | '/projetos'
     | '/tarefas'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/assistente'
     | '/calendario'
     | '/configuracoes'
@@ -155,139 +155,140 @@ export interface FileRouteTypes {
     | '/perfil'
     | '/projetos'
     | '/tarefas'
+    | '/'
   id:
     | '__root__'
-    | '/'
-    | '/assistente'
-    | '/calendario'
-    | '/configuracoes'
-    | '/hoje'
-    | '/inbox'
-    | '/lembretes'
-    | '/memoria'
-    | '/notas'
-    | '/perfil'
-    | '/projetos'
-    | '/tarefas'
+    | '/_authenticated/assistente'
+    | '/_authenticated/calendario'
+    | '/_authenticated/configuracoes'
+    | '/_authenticated/hoje'
+    | '/_authenticated/inbox'
+    | '/_authenticated/lembretes'
+    | '/_authenticated/memoria'
+    | '/_authenticated/notas'
+    | '/_authenticated/perfil'
+    | '/_authenticated/projetos'
+    | '/_authenticated/tarefas'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AssistenteRoute: typeof AssistenteRoute
-  CalendarioRoute: typeof CalendarioRoute
-  ConfiguracoesRoute: typeof ConfiguracoesRoute
-  HojeRoute: typeof HojeRoute
-  InboxRoute: typeof InboxRoute
-  LembretesRoute: typeof LembretesRoute
-  MemoriaRoute: typeof MemoriaRoute
-  NotasRoute: typeof NotasRoute
-  PerfilRoute: typeof PerfilRoute
-  ProjetosRoute: typeof ProjetosRoute
-  TarefasRoute: typeof TarefasRoute
+  AuthenticatedAssistenteRoute: typeof AuthenticatedAssistenteRoute
+  AuthenticatedCalendarioRoute: typeof AuthenticatedCalendarioRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
+  AuthenticatedHojeRoute: typeof AuthenticatedHojeRoute
+  AuthenticatedInboxRoute: typeof AuthenticatedInboxRoute
+  AuthenticatedLembretesRoute: typeof AuthenticatedLembretesRoute
+  AuthenticatedMemoriaRoute: typeof AuthenticatedMemoriaRoute
+  AuthenticatedNotasRoute: typeof AuthenticatedNotasRoute
+  AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
+  AuthenticatedProjetosRoute: typeof AuthenticatedProjetosRoute
+  AuthenticatedTarefasRoute: typeof AuthenticatedTarefasRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/assistente': {
-      id: '/assistente'
+    '/_authenticated/assistente': {
+      id: '/_authenticated/assistente'
       path: '/assistente'
       fullPath: '/assistente'
-      preLoaderRoute: typeof AssistenteRouteImport
+      preLoaderRoute: typeof AuthenticatedAssistenteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/calendario': {
-      id: '/calendario'
+    '/_authenticated/calendario': {
+      id: '/_authenticated/calendario'
       path: '/calendario'
       fullPath: '/calendario'
-      preLoaderRoute: typeof CalendarioRouteImport
+      preLoaderRoute: typeof AuthenticatedCalendarioRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/configuracoes': {
-      id: '/configuracoes'
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
       path: '/configuracoes'
       fullPath: '/configuracoes'
-      preLoaderRoute: typeof ConfiguracoesRouteImport
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hoje': {
-      id: '/hoje'
+    '/_authenticated/hoje': {
+      id: '/_authenticated/hoje'
       path: '/hoje'
       fullPath: '/hoje'
-      preLoaderRoute: typeof HojeRouteImport
+      preLoaderRoute: typeof AuthenticatedHojeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/inbox': {
-      id: '/inbox'
+    '/_authenticated/inbox': {
+      id: '/_authenticated/inbox'
       path: '/inbox'
       fullPath: '/inbox'
-      preLoaderRoute: typeof InboxRouteImport
+      preLoaderRoute: typeof AuthenticatedInboxRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lembretes': {
-      id: '/lembretes'
+    '/_authenticated/lembretes': {
+      id: '/_authenticated/lembretes'
       path: '/lembretes'
       fullPath: '/lembretes'
-      preLoaderRoute: typeof LembretesRouteImport
+      preLoaderRoute: typeof AuthenticatedLembretesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/memoria': {
-      id: '/memoria'
+    '/_authenticated/memoria': {
+      id: '/_authenticated/memoria'
       path: '/memoria'
       fullPath: '/memoria'
-      preLoaderRoute: typeof MemoriaRouteImport
+      preLoaderRoute: typeof AuthenticatedMemoriaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/notas': {
-      id: '/notas'
+    '/_authenticated/notas': {
+      id: '/_authenticated/notas'
       path: '/notas'
       fullPath: '/notas'
-      preLoaderRoute: typeof NotasRouteImport
+      preLoaderRoute: typeof AuthenticatedNotasRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/perfil': {
-      id: '/perfil'
+    '/_authenticated/perfil': {
+      id: '/_authenticated/perfil'
       path: '/perfil'
       fullPath: '/perfil'
-      preLoaderRoute: typeof PerfilRouteImport
+      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projetos': {
-      id: '/projetos'
+    '/_authenticated/projetos': {
+      id: '/_authenticated/projetos'
       path: '/projetos'
       fullPath: '/projetos'
-      preLoaderRoute: typeof ProjetosRouteImport
+      preLoaderRoute: typeof AuthenticatedProjetosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tarefas': {
-      id: '/tarefas'
+    '/_authenticated/tarefas': {
+      id: '/_authenticated/tarefas'
       path: '/tarefas'
       fullPath: '/tarefas'
-      preLoaderRoute: typeof TarefasRouteImport
+      preLoaderRoute: typeof AuthenticatedTarefasRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AssistenteRoute: AssistenteRoute,
-  CalendarioRoute: CalendarioRoute,
-  ConfiguracoesRoute: ConfiguracoesRoute,
-  HojeRoute: HojeRoute,
-  InboxRoute: InboxRoute,
-  LembretesRoute: LembretesRoute,
-  MemoriaRoute: MemoriaRoute,
-  NotasRoute: NotasRoute,
-  PerfilRoute: PerfilRoute,
-  ProjetosRoute: ProjetosRoute,
-  TarefasRoute: TarefasRoute,
+  AuthenticatedAssistenteRoute: AuthenticatedAssistenteRoute,
+  AuthenticatedCalendarioRoute: AuthenticatedCalendarioRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
+  AuthenticatedHojeRoute: AuthenticatedHojeRoute,
+  AuthenticatedInboxRoute: AuthenticatedInboxRoute,
+  AuthenticatedLembretesRoute: AuthenticatedLembretesRoute,
+  AuthenticatedMemoriaRoute: AuthenticatedMemoriaRoute,
+  AuthenticatedNotasRoute: AuthenticatedNotasRoute,
+  AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
+  AuthenticatedProjetosRoute: AuthenticatedProjetosRoute,
+  AuthenticatedTarefasRoute: AuthenticatedTarefasRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
