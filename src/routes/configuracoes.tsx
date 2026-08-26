@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, Brain, Cloud, Keyboard, Sparkles } from "lucide-react";
-import { useState, type LucideIcon } from "react";
+import { Bell, Brain, Cloud, Keyboard, Sparkles, type LucideIcon } from "lucide-react";
+import { useState } from "react";
+
 import { PageHeader } from "@/components/page-header";
 import { SectionTitle } from "@/components/cards";
 import { ToggleSwitchGlass } from "@/components/ui/toggle-switch-glass";
@@ -109,7 +110,7 @@ function SettingsPage() {
               <ToggleSwitchGlass
                 checked={toggles[t.key] ?? false}
                 onChange={(v) => setToggles((prev) => ({ ...prev, [t.key]: v }))}
-                disabled={t.disabled}
+                disabled={t.disabled ?? false}
                 id={t.key}
               />
             </div>

@@ -59,7 +59,7 @@ export function NativeButton({
 
   return (
     <motion.button
-      whileTap={isDisabled ? undefined : { scale: 0.96 }}
+      {...(isDisabled ? {} : { whileTap: { scale: 0.96 } })}
       transition={PRESS_SPRING}
       disabled={isDisabled}
       className={cn(
