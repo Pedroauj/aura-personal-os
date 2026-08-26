@@ -181,7 +181,7 @@ export function useAssistant() {
             title: proposal.title,
             date: p.date ?? isoToday(),
             time: p.time ?? "09:00",
-            durationMin: 60,
+            durationMin: p.durationMin ?? 60,
             category: p.category ?? "Geral",
           });
           break;
