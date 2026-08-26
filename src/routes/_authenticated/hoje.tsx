@@ -7,7 +7,7 @@ import { greeting, isoToday, longDate } from "@/lib/format";
 import { USER } from "@/lib/mock-data";
 import { PageHeader } from "@/components/page-header";
 
-export const Route = createFileRoute("/hoje")({
+export const Route = createFileRoute("/_authenticated/hoje")({
   head: () => ({
     meta: [
       { title: "Hoje — Aurora" },

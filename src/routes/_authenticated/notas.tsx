@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import type { Note } from "@/lib/types";
 
-export const Route = createFileRoute("/notas")({
+export const Route = createFileRoute("/_authenticated/notas")({
   head: () => ({
     meta: [
       { title: "Notas — Aurora" },
